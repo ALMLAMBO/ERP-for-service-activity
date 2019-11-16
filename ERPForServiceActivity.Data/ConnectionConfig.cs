@@ -4,7 +4,7 @@ using System.Text;
 using Google.Cloud.Firestore;
 
 namespace ERPForServiceActivity.Data {
-	class ConnectionConfig {
+	public class ConnectionConfig {
 		private FirestoreDb database;
 		private string projectId;
 
