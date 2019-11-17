@@ -12,17 +12,17 @@ namespace ERPForServiceActivity.Tests {
 			Query query = database.Collection("parts");
 			QuerySnapshot qs = await query.GetSnapshotAsync();
 
-			Assert.NotEqual(0, qs.Count);
+			Assert.NotNull(qs);
 
 			Query query1 = database.Collection("licenses");
 			QuerySnapshot qs1 = await query1.GetSnapshotAsync();
 
-			Assert.NotEqual(0, qs1.Count);
+			Assert.NotNull(qs1);
 
 			Query query2 = database.Collection("service-repairs");
 			QuerySnapshot qs2 = await query2.GetSnapshotAsync();
 
-			Assert.NotEqual(0, qs2.Count);
+			Assert.NotNull(qs2);
 		}
 
 		[Fact]
