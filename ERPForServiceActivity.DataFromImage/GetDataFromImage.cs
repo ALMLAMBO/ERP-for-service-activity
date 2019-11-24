@@ -5,11 +5,11 @@ using ERPForServiceActivity.Security;
 using Google.Cloud.Vision.V1;
 
 namespace ERPForServiceActivity.DataFromImage {
-	public class DataFromImage {
+	public class GetDataFromImage {
 		private string filepath = @"E:\Diploma-project\ERP-for-service-activity\ERPForServiceActivity.DataFromImage\erp-for-service-activity-7896e2fd1fc6.json";
 		private ImageAnnotatorClient client;
 
-		public DataFromImage() {
+		public GetDataFromImage() {
 			Environment.SetEnvironmentVariable(
 				"GOOGLE_APPLICATION_CREDENTIALS", filepath);
 
@@ -30,7 +30,7 @@ namespace ERPForServiceActivity.DataFromImage {
 				Match snMatch = CommonSecurityConstants
 					.getLGSerialNumber.Match(annotation.Description);
 
-				if(snMatch.Success && !string.IsNullOrEmpty(serialNumber)) {
+				if(snMatch.Success) {
 					serialNumber = annotation.Description;
 				}
 			}
