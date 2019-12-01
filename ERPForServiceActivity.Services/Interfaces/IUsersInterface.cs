@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using ERPForServiceActivity.Models.User;
 using FirebaseAdmin.Auth;
+using ERPForServiceActivity.CommonModels.BindingModels.Users;
 
 namespace ERPForServiceActivity.Services.Interfaces {
 	public interface IUsersInterface {
-		public void AddUser(string role, UserInfo userToAdd);
+		public void AddUser(AddUserBindingModel userToAdd);
 
 		public Task<UserRecord> GetUserData(string uid);
 
