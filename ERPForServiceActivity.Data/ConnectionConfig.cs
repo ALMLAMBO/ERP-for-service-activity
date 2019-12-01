@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Google.Cloud.Firestore;
+using ERPForServiceActivity.Security;
 
 namespace ERPForServiceActivity.Data {
 	public class ConnectionConfig {
@@ -9,7 +8,7 @@ namespace ERPForServiceActivity.Data {
 		private string projectId;
 
 		private void SetUp() {
-			string filepath = @"E:\\Diploma-project\\ERP-for-service-activity\\ERPForServiceActivity.Data\\erp-for-service-activity-d0a7eb625242.json";
+			string filepath = CommonSecurityConstants.PathToFirestoreJson;
 			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
 			projectId = "erp-for-service-activity";
 			database = FirestoreDb.Create(projectId);
