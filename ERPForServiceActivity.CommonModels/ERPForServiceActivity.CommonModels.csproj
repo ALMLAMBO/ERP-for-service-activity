@@ -9,6 +9,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="BindingModels\Users\" />
 	  <Folder Include="BindingModels\WarehouseParts\" />
 	  <Folder Include="ViewModels\" />
 	</ItemGroup>
