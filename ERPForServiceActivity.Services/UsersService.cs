@@ -5,12 +5,28 @@ using System.Threading.Tasks;
 using FirebaseAdmin.Auth;
 using ERPForServiceActivity.Services.Interfaces;
 using ERPForServiceActivity.Models.User;
+using System.Security.Claims;
+using ERPForServiceActivity.Security;
 
 namespace ERPForServiceActivity.Services {
 	public class UsersService : IUsersInterface {
 		public async void AddUser(string role, UserInfo userToAdd) {
-			//TODO IT
-			throw new NotImplementedException();
+			Dictionary<string, object> claims = new Dictionary<string, object> {
+				{ ClaimTypes.Role, userToAdd.Role }
+			};
+
+			UserRecordArgs newUser = new UserRecordArgs() {
+				Email = userToAdd.Email,
+				EmailVerified = false,
+				Password = CommonSecurityConstants.FirstPassword,
+				Disabled = false
+			};
+
+			UserRecord record = await FirebaseAuth
+				.DefaultInstance.CreateUserAsync(newUser);
+
+			await FirebaseAuth.DefaultInstance
+				.SetCustomUserClaimsAsync(record.Uid, claims);
 		}
 
 		public async void DeleteUser(string uid) {
@@ -19,11 +35,6 @@ namespace ERPForServiceActivity.Services {
 
 		public async Task<UserRecord> GetUserData(string uid) {
 			return await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-		}
-
-		public async void UpdateUser(string uid, UserRecordArgs updatedUser) {
-			//TODO IT
-			throw new NotImplementedException();
 		}
 	}
 }
