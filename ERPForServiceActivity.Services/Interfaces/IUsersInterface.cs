@@ -8,8 +8,6 @@ namespace ERPForServiceActivity.Services.Interfaces {
 
 		public Task<UserRecord> GetUserData(string uid);
 
-		public void UpdateUser(string uid, UserRecordArgs updatedUser);
-
 		public void DeleteUser(string uid);
 	}
 }
