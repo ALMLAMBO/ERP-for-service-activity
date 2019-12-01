@@ -3,13 +3,11 @@
 @attribute [IgnoreAntiforgeryToken]
 @inject SignInManager<IdentityUser> SignInManager
 @functions {
-    public async Task<IActionResult> OnPost()
-    {
-        if (SignInManager.IsSignedIn(User))
-        {
-            await SignInManager.SignOutAsync();
-        }
+	public async Task<IActionResult> OnPost() {
+		if (SignInManager.IsSignedIn(User)) {
+			await SignInManager.SignOutAsync();
+		}
 
-        return Redirect("~/");
-    }
+		return Redirect("~/");
+	}
 }
