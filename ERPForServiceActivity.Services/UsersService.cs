@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using FirebaseAdmin.Auth;
-using ERPForServiceActivity.Services.Interfaces;
-using ERPForServiceActivity.Models.User;
 using System.Security.Claims;
+using FirebaseAdmin.Auth;
+using Google.Apis.Auth.OAuth2;
+using ERPForServiceActivity.Services.Interfaces;
 using ERPForServiceActivity.Security;
+using ERPForServiceActivity.CommonModels.BindingModels.Users;
+using FirebaseAdmin;
 
 namespace ERPForServiceActivity.Services {
 	public class UsersService : IUsersInterface {
-		public async void AddUser(string role, UserInfo userToAdd) {
+		public UsersService() {
+			FirebaseApp.Create(new AppOptions() {
+				Credential = GoogleCredential.FromFile(
+					CommonSecurityConstants.PathToFirebaseAdmin)
+			});
+		}
+
+		public async void AddUser(AddUserBindingModel userToAdd) {
 			Dictionary<string, object> claims = new Dictionary<string, object> {
 				{ ClaimTypes.Role, userToAdd.Role }
 			};
