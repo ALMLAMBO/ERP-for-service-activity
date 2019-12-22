@@ -20,6 +20,10 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 
 		public bool InWarranty { get; set; }
 
+		public string ApplicanceBrand { get; set; }
+
+		public string ApplianceType { get; set; }
+
 		public string ApplianceModel { get; set; }
 
 		public string ApplianceSerialNumber { get; set; }
