@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.Secur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.DataFromImage", "ERPForServiceActivity.DataFromImage\ERPForServiceActivity.DataFromImage.csproj", "{B6232725-3A71-4885-BFF1-15593FAB0234}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{D58AA967-BD11-4A5D-A42E-D3CA86867C33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{D58AA967-BD11-4A5D-A42E-D3CA86867C33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
