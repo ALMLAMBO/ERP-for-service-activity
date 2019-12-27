@@ -1,5 +1,24 @@
 ﻿@page "/Login"
+@using ERPForServiceActivity.Models.User
+
+<DxFormLayout>
+	<DxFormLayoutGroup Caption="Login page">
+		<DxFormLayoutItem Caption="Enter email">
+			<Template>
+				<DxTextBox @bind-Text="@userInfo.Email"></DxTextBox>
+			</Template>
+		</DxFormLayoutItem>
+
+		<DxFormLayoutItem Caption="Enter password">
+			<Template>
+				<DxTextBox Password="true" 
+						   @bind-Text="@userInfo.Password">
+				</DxTextBox>
+			</Template>
+		</DxFormLayoutItem>
+	</DxFormLayoutGroup>	
+</DxFormLayout>
 
 @code {
-
+	UserInfo userInfo = new UserInfo();
 }
