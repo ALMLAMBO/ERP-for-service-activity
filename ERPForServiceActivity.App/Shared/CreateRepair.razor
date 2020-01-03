@@ -1,1 +1,66 @@
 ﻿@page "/CreateRepair"
+@using ERPForServiceActivity.CommonModels.BindingModels.Repairs
+@using ERPForServiceActivity.Common
+@using BlazorInputFile
+@inject NavigationManager navMan
+
+<head>
+	<style>
+		.resize {
+			resize: vertical;
+		}
+	</style>
+</head>
+
+<MatButton @onclick="@ChangeTab"></MatButton>
+<MatTabGroup @bind-ActiveIndex="@tabIndex">
+	<MatTab Label="First">
+
+	</MatTab>
+</MatTabGroup>
+
+<button type="submit"
+		class="btn btn-primary mx-3 float-right btn-lg"
+		@onclick="SaveRepair">
+	Save
+</button>
+
+<button type="button"
+		class="btn btn-secondary float-right btn-lg"
+		@onclick="ResetForm">
+	Cancel
+</button>
+
+<div>@IdClass.Id</div>
+
+@code {
+	public int tabIndex = 0;
+
+	string newBrand = "";
+	string newModel = "";
+	string warrantyCardNumber = "";
+	string serviceName = "";
+	AddRepairBindingModel repair = new AddRepairBindingModel();
+
+	void ChangeTab() {
+
+	}
+
+	void SaveRepair() {
+		repair.RepairId = IdClass.Id;
+
+		IdClass.Id++;
+	}
+
+	void ResetForm() {
+
+	}
+
+	void CheckForValidSNImage(IFileListEntry [] files) {
+
+	}
+
+	void SaveImages(IFileListEntry [] files) {
+
+	}
+}
