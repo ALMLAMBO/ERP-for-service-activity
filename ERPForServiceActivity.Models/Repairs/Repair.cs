@@ -12,6 +12,8 @@ namespace ERPForServiceActivity.Models.Repairs {
 		[FirestoreProperty]
 		public int RepairId { get; set; }
 
+		public string RepairStatus { get; set; }
+
 		[Required]
 		[FirestoreProperty]
 		public string CustomerName { get; set; }
