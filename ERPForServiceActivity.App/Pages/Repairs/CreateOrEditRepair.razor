@@ -1,6 +1,4 @@
 ﻿@page "/CreateRepair"
-@using ERPForServiceActivity.CommonModels.BindingModels.Repairs
-@using ERPForServiceActivity.Common
 @using BlazorInputFile
 @inject NavigationManager navMan
 
@@ -12,44 +10,128 @@
 	</style>
 </head>
 
-<MatButton @onclick="@ChangeTab"></MatButton>
-<MatTabGroup @bind-ActiveIndex="@tabIndex">
-	<MatTab Label="First">
-		
-	</MatTab>
-</MatTabGroup>
 
-<button type="submit"
-		class="btn btn-primary mx-3 float-right btn-lg"
-		@onclick="SaveRepair">
-	Save
-</button>
+<EditForm Model="@repair">
+	<DataAnnotationsValidator />
 
-<button type="button"
-		class="btn btn-secondary float-right btn-lg"
-		@onclick="ResetForm">
-	Cancel
-</button>
+	<div class="mat-layout-grid">
+		<div class="mat-layout-grid-inner">
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+				<h1>Create a new repair</h1>
+			</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			</div>
 
-<div>@IdClass.Id</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+				<p>
+					<h3>Customer data</h3>
+					<MatDivider />
+				</p>
+
+				<p>
+					<MatTextField Label="Name"
+								  Outlined="true"
+								  @bind-Value="@repair.CustomerName" />
+				</p>
+
+				<p>
+					<MatTextField Label="Address"
+								  Outlined="true"
+								  @bind-Value="@repair.CustomerAddress" />
+				</p>
+
+				<p>
+					<MatTextField Label="Phone Number"
+								  Outlined="true"
+								  Type="number"
+								  @bind-Value="@repair.CustomerPhoneNumber" />
+				</p>
+
+				<p>
+					<MatCheckbox Label="Going to address"
+								 @bind-Value="@repair.GoingToAddress" />
+				</p>
+
+				<p>
+					<MatTextField Label="Defect by customer"
+								  Outlined="true"
+								  @bind-Value="@repair.Defect" />
+				</p>
+
+				<p>
+					<MatTextField Label="Add equipment"
+								  Outlined="true"
+								  @bind-Value="@repair.AdditionalInformation" />
+				</p>
+
+				<p>
+					<MatTextField 
+						Label="Other information"
+						Outlined="true"
+						@bind-Value="@repair.AdditionalInformation" />
+				</p>
+
+				<ValidationSummary />
+			</div>
+
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+				<p>
+					<h3>Unit data</h3>
+					<MatDivider />
+				</p>
+
+				<p>
+					<DxComboBox 
+						NullText="Select brand"
+						Data="@BrandsInfo.Brands"
+						ListRenderMode="@ListRenderMode.Virtual"
+						AllowUserInput="true"
+						@bind-Text="@newBrand"
+						@bind-SelectedItem="@repair.ApplianceBrand" />
+				</p>
+
+				
+
+				<p>
+					<DxComboBox 
+						Data="@BrandsInfo.Brands"
+						ListRenderMode="@ListRenderMode.Virtual"
+						AllowUserInput="true"
+						@bind-Text="@newModel"
+						@bind-SelectedItem="@repair.ApplianceModel" />
+				</p>
+			</div>
+
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+				<MatButton Raised="true" Type="submit">Save</MatButton>
+				<MatButton Raised="true" OnClick="ResetForm">Cancel</MatButton>
+			</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			</div>
+		</div>
+	</div>
+
+</EditForm>
 
 @code {
 	public int tabIndex = 0;
 
 	string newBrand = "";
 	string newModel = "";
-	string warrantyCardNumber = "";
 	string serviceName = "";
 	AddRepairBindingModel repair = new AddRepairBindingModel();
+	List<string> models = new List<string>();
 
 	void ChangeTab() {
 
 	}
 
 	void SaveRepair() {
-		repair.RepairId = IdClass.Id;
 
-		IdClass.Id++;
 	}
 
 	void ResetForm() {
@@ -60,7 +142,23 @@
 
 	}
 
+	void UploadRepair() {
+
+	}
+
 	void SaveImages(IFileListEntry [] files) {
 
+	}
+
+	void CheckContainsInBrands() {
+		if(!BrandsInfo.Brands.Contains(newBrand)) {
+			BrandsInfo.Brands.Add(newBrand);
+
+			BrandsInfo.ModelsForBrand
+				.Add(newBrand, new List<string>());
+		}
+		else {
+			models = BrandsInfo.ModelsForBrand[newBrand];
+		}
 	}
 }
