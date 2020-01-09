@@ -1,6 +1,7 @@
 ﻿@page "/CreateRepair"
 @using BlazorInputFile
 @inject NavigationManager navMan
+@inject HttpClient client
 
 <head>
 	<style>
@@ -83,31 +84,73 @@
 				</p>
 
 				<p>
-					<DxComboBox 
-						NullText="Select brand"
-						Data="@BrandsInfo.Brands"
-						ListRenderMode="@ListRenderMode.Virtual"
-						AllowUserInput="true"
-						@bind-Text="@newBrand"
-						@bind-SelectedItem="@repair.ApplianceBrand" />
+					<RadzenMenu>
+						<RadzenMenuItem Text="Select Brand"></RadzenMenuItem>	
+					</RadzenMenu>
 				</p>
-
-				
 
 				<p>
-					<DxComboBox 
-						Data="@BrandsInfo.Brands"
-						ListRenderMode="@ListRenderMode.Virtual"
-						AllowUserInput="true"
-						@bind-Text="@newModel"
-						@bind-SelectedItem="@repair.ApplianceModel" />
+					
+				</p>
+
+				<p>
+					<DxComboBox Data="@BrandsInfo.Brands"
+								NullText="Select type"
+								ListRenderMode="@ListRenderMode.Virtual"
+								AllowUserInput="true"
+								@bind-SelectedItem="@repair.ApplianceType" />
+				</p>
+
+				<p>
+					<MatTextField Label="Model"
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceModel" />
+
+					<InputFile OnChange="@CheckForValidSNImage"></InputFile>
+				</p>
+
+				<p>
+					<MatTextField Label="S/N"
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceSerialNumber" />
+
+					<MatTextField Label="Product code/IMEI"
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceProductCodeOrImei" />
+				</p>
+
+				<p>
+					<MatDatePicker Label="Bought at"
+								   Outlined="true"
+								   @bind-Value="@repair.BoughtAt" />
+
+					<MatTextField Label="WC number"
+								  Outlined="true"
+								  @bind-Value="@repair.WarrantyCardNumber" />
+				</p>
+
+				<p>
+					<MatNumericUpDownField Label="Warranty period"
+										   Step="12"
+										   Type="number"
+										   Minimum="0"
+										   DecimalPlaces="0"
+										   @bind-Value="@repair.WarrantyPeriod" />
+
+					<InputFile OnChange="@SaveImages"></InputFile>
+				</p>
+
+				<p>
+					<MatTextField Label="Dealer/Shop"
+								  Outlined="true"
+								  @bind-Value="@repair.WarrantyCardNumber" />
 				</p>
 			</div>
 
 			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
 			</div>
 			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-				<MatButton Raised="true" Type="submit">Save</MatButton>
+				<MatButton Raised="true" OnClick="UploadRepair" Type="submit">Save</MatButton>
 				<MatButton Raised="true" OnClick="ResetForm">Cancel</MatButton>
 			</div>
 			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
@@ -118,47 +161,27 @@
 </EditForm>
 
 @code {
-	public int tabIndex = 0;
-
+	int id = 0;
 	string newBrand = "";
 	string newModel = "";
 	string serviceName = "";
 	AddRepairBindingModel repair = new AddRepairBindingModel();
 	List<string> models = new List<string>();
 
-	void ChangeTab() {
+	void CheckForValidSNImage(IFileListEntry [] files) {
 
 	}
 
-	void SaveRepair() {
-
+	void UploadRepair() {
+		client.PostJsonAsync
+			<AddRepairBindingModel>("", repair);
 	}
 
 	void ResetForm() {
 
 	}
 
-	void CheckForValidSNImage(IFileListEntry [] files) {
-
-	}
-
-	void UploadRepair() {
-
-	}
-
 	void SaveImages(IFileListEntry [] files) {
 
-	}
-
-	void CheckContainsInBrands() {
-		if(!BrandsInfo.Brands.Contains(newBrand)) {
-			BrandsInfo.Brands.Add(newBrand);
-
-			BrandsInfo.ModelsForBrand
-				.Add(newBrand, new List<string>());
-		}
-		else {
-			models = BrandsInfo.ModelsForBrand[newBrand];
-		}
 	}
 }
