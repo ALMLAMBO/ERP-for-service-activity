@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ERPForServiceActivity.App.Areas.Identity;
 using ERPForServiceActivity.App.Data;
+using System.Net.Http;
+using Microsoft.AspNetCore.Blazor.Services;
 
 namespace ERPForServiceActivity.App {
 	public class Startup {
@@ -36,6 +38,17 @@ namespace ERPForServiceActivity.App {
 			services.AddServerSideBlazor();
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 			services.AddSingleton<WeatherForecastService>();
+			services.AddScoped<HttpClient>();
+
+			if(!services.Any(x => x.ServiceType == typeof(HttpClient))) {
+				services.AddScoped<HttpClient>(s => {
+					var uriHelper = s.GetRequiredService<IUriHelper>();
+
+					return new HttpClient() {
+						BaseAddress = new Uri(uriHelper.GetBaseUri())
+					};
+				});
+			}
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
