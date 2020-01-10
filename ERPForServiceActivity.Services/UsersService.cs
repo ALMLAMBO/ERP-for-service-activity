@@ -70,7 +70,7 @@ namespace ERPForServiceActivity.Services {
 			return true;
 		}
 
-		public async void LogOut() {
+		public void LogOut() {
 			
 		}
 	}
