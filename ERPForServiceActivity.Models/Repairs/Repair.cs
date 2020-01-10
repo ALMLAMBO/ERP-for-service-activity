@@ -12,6 +12,8 @@ namespace ERPForServiceActivity.Models.Repairs {
 		[FirestoreProperty]
 		public int RepairId { get; set; }
 
+		[Required]
+		[FirestoreProperty]
 		public string RepairStatus { get; set; }
 
 		[Required]
@@ -24,11 +26,15 @@ namespace ERPForServiceActivity.Models.Repairs {
 
 		[Required]
 		[FirestoreProperty]
-		public bool GoingToAddress { get; set; }
+		public string CustomerPhoneNumber { get; set; }
 
 		[Required]
 		[FirestoreProperty]
-		public string CustomerPhoneNumber { get; set; }
+		public string DefectByCustomer { get; set; }
+
+		[Required]
+		[FirestoreProperty]
+		public bool GoingToAddress { get; set; }
 
 		[Required]
 		[FirestoreProperty]
@@ -56,24 +62,26 @@ namespace ERPForServiceActivity.Models.Repairs {
 
 		[Required]
 		[FirestoreProperty]
-		public long WarrantyCardNumber { get; set; }
+		public string ApplianceEquipment { get; set; }
+
+		[Required]
+		[FirestoreProperty]
+		public string BoughtFrom { get; set; }
+
+		[Required]
+		[FirestoreProperty]
+		public string WarrantyCardNumber { get; set; }
+
+		[Required]
+		[FirestoreProperty]
+		public int WarrantyPeriod { get; set; }
 
 		[Required]
 		[FirestoreProperty]
 		[DataType(DataType.Date)]
 		public DateTime BoughtAt { get; set; }
 
-		[Required]
-		[FirestoreProperty]
-		public string Defect { get; set; }
-
 		[FirestoreProperty]
 		public string AdditionalInformation { get; set; }
-
-		[Required]
-		public IFileListEntry AppliancePhotoInfo { get; set; }
-
-		[Required]
-		public IFileListEntry [] OtherPhotos { get; set; }
 	}
 }
