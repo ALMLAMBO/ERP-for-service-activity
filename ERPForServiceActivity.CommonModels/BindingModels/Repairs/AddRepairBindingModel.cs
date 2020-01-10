@@ -10,37 +10,55 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		[Required]
 		public int RepairId { get; set; }
 
+		[Required]
 		public string CustomerName { get; set; }
 
+		[Required]
 		public string CustomerAddress { get; set; }
-
-		public bool GoingToAddress { get; set; }
-
+		
+		[Required]
 		public string CustomerPhoneNumber { get; set; }
 
+		[Required]
+		public string DefectByCustomer { get; set; }
+
+		[Required]
+		public bool GoingToAddress { get; set; }
+
+		[Required]
 		public bool InWarranty { get; set; }
 
+		[Required]
 		public string ApplianceBrand { get; set; }
 
+		[Required]
 		public string ApplianceType { get; set; }
 
+		[Required]
 		public string ApplianceModel { get; set; }
 
+		[Required]
 		public string ApplianceSerialNumber { get; set; }
 
+		[Required]
 		public string ApplianceProductCodeOrImei { get; set; }
 
-		public long WarrantyCardNumber { get; set; }
+		[Required]
+		public string ApplianceEquipment { get; set; }
 
+		[Required]
+		public string BoughtFrom { get; set; }
+
+		[Required]
+		public string WarrantyCardNumber { get; set; }
+
+		[Required]
+		public int WarrantyPeriod { get; set; }
+
+		[Required]
 		[DataType(DataType.Date)]
 		public DateTime BoughtAt { get; set; }
 
-		public string Defect { get; set; }
-
 		public string AdditionalInformation { get; set; }
-
-		public IFileListEntry AppliancePhotoInfo { get; set; }
-
-		public IFileListEntry [] OtherPhotos { get; set; }
 	}
 }
