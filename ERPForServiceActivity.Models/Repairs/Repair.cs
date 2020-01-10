@@ -14,6 +14,10 @@ namespace ERPForServiceActivity.Models.Repairs {
 
 		[Required]
 		[FirestoreProperty]
+		public DateTime CreatedAt { get; set; }
+
+		[Required]
+		[FirestoreProperty]
 		public string RepairStatus { get; set; }
 
 		[Required]
