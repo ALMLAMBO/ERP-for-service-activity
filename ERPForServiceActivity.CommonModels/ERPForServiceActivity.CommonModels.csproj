@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 	  <Folder Include="BindingModels\WarehouseParts\" />
+	  <Folder Include="ViewModels\Repairs\" />
 	</ItemGroup>
 
 	<ItemGroup>
