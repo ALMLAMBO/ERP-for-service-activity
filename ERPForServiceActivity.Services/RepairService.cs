@@ -1,8 +1,9 @@
-﻿using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
+﻿using System.Threading.Tasks;
+using Google.Cloud.Firestore;
 using ERPForServiceActivity.Data;
 using ERPForServiceActivity.Models.Repairs;
 using ERPForServiceActivity.Services.Interfaces;
-using Google.Cloud.Firestore;
+using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
 
 namespace ERPForServiceActivity.Services {
 	public class RepairService : IRepairInterface {
@@ -31,29 +32,62 @@ namespace ERPForServiceActivity.Services {
 				.Document(docId)
 				.Collection("repairs");
 
-			Repair repairModel = new Repair() {
-				RepairId = repair.RepairId,
-				RepairStatus = "created",
-				CustomerName = repair.CustomerName,
-				CustomerAddress = repair.CustomerAddress,
-				CustomerPhoneNumber = repair.CustomerPhoneNumber,
-				DefectByCustomer = repair.DefectByCustomer,
-				GoingToAddress = repair.GoingToAddress,
-				InWarranty = true, // TODO: change it get from repair
-				ApplianceBrand = repair.ApplianceBrand,
-				ApplianceType = repair.ApplianceType,
-				ApplianceModel = repair.ApplianceModel,
-				ApplianceSerialNumber = repair.ApplianceSerialNumber,
-				ApplianceProductCodeOrImei = repair.ApplianceProductCodeOrImei,
-				ApplianceEquipment = repair.ApplianceEquipment,
-				BoughtFrom = repair.BoughtFrom,
-				WarrantyCardNumber = repair.WarrantyCardNumber,
-				WarrantyPeriod = repair.WarrantyPeriod,
-				BoughtAt = repair.BoughtAt,
-				AdditionalInformation = repair.AdditionalInformation
-			};
+			Repair repairModel = new Repair(repair);
 
-			await repairsColRef.AddAsync(repairModel);
+			await db.RunTransactionAsync(async transaction => {
+				await repairsColRef.AddAsync(repairModel);
+			});
+
+			UpdateRepairId(serviceName, repair.RepairId);
+		}
+
+		private async void UpdateRepairId(string serviceName, int id) {
+			FirestoreDb db = connection.GetFirestoreDb();
+			Query query = db
+				.Collection("last-id-repairs")
+				.WhereEqualTo("ServiceName", serviceName);
+
+			QuerySnapshot qs = await query.GetSnapshotAsync();
+			string docId = string.Empty;
+
+			foreach (DocumentSnapshot ds in qs.Documents) {
+				if(ds.Exists) {
+					docId = ds.Id;
+				}
+			}
+
+			DocumentReference docRef = db
+				.Collection("last-id-repairs")
+				.Document(docId);
+
+			await db.RunTransactionAsync(async transaction => {
+				await docRef.UpdateAsync("Id", id);
+			});
+		}
+
+		private async Task<int> GetLastId(string serviceName) {
+			FirestoreDb db = connection.GetFirestoreDb();
+			int id = int.MinValue;
+
+			Query query = db
+				.Collection("last-id-repairs")
+				.WhereEqualTo("ServiceName", serviceName);
+
+			QuerySnapshot qs = await query.GetSnapshotAsync();
+			string docId = string.Empty;
+
+			foreach (DocumentSnapshot ds in qs.Documents) {
+				if (ds.Exists) {
+					docId = ds.Id;
+					id = ds.GetValue<int>("Id");
+				}
+			}
+
+			DocumentReference docRef = db
+				.Collection("last-id-repairs")
+				.Document(docId);
+
+			return id;
 		}
 	}
 }
