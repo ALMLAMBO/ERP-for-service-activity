@@ -57,7 +57,7 @@
 				<p>
 					<MatTextField Label="Defect by customer"
 								  Outlined="true"
-								  @bind-Value="@repair.Defect" />
+								  @bind-Value="@repair.DefectByCustomer" />
 				</p>
 
 				<p>
@@ -155,7 +155,7 @@
 
 	void UploadRepair() {
 		client.PostJsonAsync
-			<AddRepairBindingModel>("", repair);
+			<AddRepairBindingModel>("api/repairs/create-repair", repair);
 	}
 
 	void ResetForm() {
