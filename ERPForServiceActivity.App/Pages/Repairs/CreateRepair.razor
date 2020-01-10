@@ -132,7 +132,7 @@
 				<p>
 					<MatTextField Label="Dealer/Shop"
 								  Outlined="true"
-								  @bind-Value="@repair.WarrantyCardNumber" />
+								  @bind-Value="@repair.BoughtFrom" />
 				</p>
 			</div>
 
@@ -154,8 +154,12 @@
 	AddRepairBindingModel repair = new AddRepairBindingModel();
 
 	void UploadRepair() {
+		repair.RepairId = IdClass.Id++;
+
 		client.PostJsonAsync
-			<AddRepairBindingModel>("api/repairs/create-repair", repair);
+			<AddRepairBindingModel>("https://localhost:44355/api/repairs/create-repair", repair);
+
+		StateHasChanged();
 	}
 
 	void ResetForm() {
