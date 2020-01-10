@@ -1,5 +1,4 @@
 ﻿@page "/CreateRepair"
-@using BlazorInputFile
 @inject NavigationManager navMan
 @inject HttpClient client
 
@@ -64,7 +63,7 @@
 				<p>
 					<MatTextField Label="Add equipment"
 								  Outlined="true"
-								  @bind-Value="@repair.AdditionalInformation" />
+								  @bind-Value="@repair.ApplianceEquipment" />
 				</p>
 
 				<p>
@@ -84,29 +83,21 @@
 				</p>
 
 				<p>
-					<RadzenMenu>
-						<RadzenMenuItem Text="Select Brand"></RadzenMenuItem>	
-					</RadzenMenu>
+					<MatTextField Label="Select brand"
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceBrand"/>
 				</p>
 
 				<p>
-					
-				</p>
-
-				<p>
-					<DxComboBox Data="@BrandsInfo.Brands"
-								NullText="Select type"
-								ListRenderMode="@ListRenderMode.Virtual"
-								AllowUserInput="true"
-								@bind-SelectedItem="@repair.ApplianceType" />
+					<MatTextField Label="Select Type" 
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceType"/>
 				</p>
 
 				<p>
 					<MatTextField Label="Model"
 								  Outlined="true"
 								  @bind-Value="@repair.ApplianceModel" />
-
-					<InputFile OnChange="@CheckForValidSNImage"></InputFile>
 				</p>
 
 				<p>
@@ -136,8 +127,6 @@
 										   Minimum="0"
 										   DecimalPlaces="0"
 										   @bind-Value="@repair.WarrantyPeriod" />
-
-					<InputFile OnChange="@SaveImages"></InputFile>
 				</p>
 
 				<p>
@@ -162,15 +151,7 @@
 
 @code {
 	int id = 0;
-	string newBrand = "";
-	string newModel = "";
-	string serviceName = "";
 	AddRepairBindingModel repair = new AddRepairBindingModel();
-	List<string> models = new List<string>();
-
-	void CheckForValidSNImage(IFileListEntry [] files) {
-
-	}
 
 	void UploadRepair() {
 		client.PostJsonAsync
@@ -178,10 +159,6 @@
 	}
 
 	void ResetForm() {
-
-	}
-
-	void SaveImages(IFileListEntry [] files) {
 
 	}
 }
