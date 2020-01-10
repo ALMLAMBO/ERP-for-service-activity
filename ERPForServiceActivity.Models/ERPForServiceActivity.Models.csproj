@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj" />
     <ProjectReference Include="..\ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj" />
     <ProjectReference Include="..\ERPForServiceActivity.Security\ERPForServiceActivity.Security.csproj" />
   </ItemGroup>
