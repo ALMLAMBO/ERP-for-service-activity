@@ -152,13 +152,15 @@
 @code {
 	int id = 0;
 	AddRepairBindingModel repair = new AddRepairBindingModel();
+	RepairService service = new RepairService();
 
 	void UploadRepair() {
-		repair.RepairId = IdClass.Id++;
+		repair.RepairId = service.GetLastId("Value").Result;
 
 		client.PostJsonAsync
 			<AddRepairBindingModel>("https://localhost:44355/api/repairs/create-repair", repair);
 
+		navMan.NavigateTo("/");
 		StateHasChanged();
 	}
 
