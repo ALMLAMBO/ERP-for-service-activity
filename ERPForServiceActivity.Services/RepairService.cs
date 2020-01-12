@@ -11,6 +11,7 @@ namespace ERPForServiceActivity.Services {
 
 		public async void UploadRepair(string serviceName, AddRepairBindingModel repair) {
 			FirestoreDb db = connection.GetFirestoreDb();
+			int repairId = GetLastId(serviceName).Result;
 
 			CollectionReference colRef = db
 				.Collection("service-repairs");
@@ -33,12 +34,13 @@ namespace ERPForServiceActivity.Services {
 				.Collection("repairs");
 
 			Repair repairModel = new Repair(repair);
+			repairModel.RepairId = repairId;
 
 			await db.RunTransactionAsync(async transaction => {
 				await repairsColRef.AddAsync(repairModel);
 			});
 
-			UpdateRepairId(serviceName, repair.RepairId);
+			UpdateRepairId(serviceName, repair.RepairId++);
 		}
 
 		private async void UpdateRepairId(string serviceName, int id) {
@@ -65,7 +67,7 @@ namespace ERPForServiceActivity.Services {
 			});
 		}
 
-		private async Task<int> GetLastId(string serviceName) {
+		public async Task<int> GetLastId(string serviceName) {
 			FirestoreDb db = connection.GetFirestoreDb();
 			int id = int.MinValue;
 
@@ -74,18 +76,12 @@ namespace ERPForServiceActivity.Services {
 				.WhereEqualTo("ServiceName", serviceName);
 
 			QuerySnapshot qs = await query.GetSnapshotAsync();
-			string docId = string.Empty;
 
 			foreach (DocumentSnapshot ds in qs.Documents) {
 				if (ds.Exists) {
-					docId = ds.Id;
 					id = ds.GetValue<int>("Id");
 				}
 			}
-
-			DocumentReference docRef = db
-				.Collection("last-id-repairs")
-				.Document(docId);
 
 			return id;
 		}
