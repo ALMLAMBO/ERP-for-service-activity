@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Net.Http;
+using Microsoft.AspNetCore.Blazor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,8 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ERPForServiceActivity.App.Areas.Identity;
 using ERPForServiceActivity.App.Data;
-using System.Net.Http;
-using Microsoft.AspNetCore.Blazor.Services;
+using ERPForServiceActivity.Services;
 
 namespace ERPForServiceActivity.App {
 	public class Startup {
@@ -33,6 +34,8 @@ namespace ERPForServiceActivity.App {
 			services.AddServerSideBlazor();
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 			services.AddSingleton<WeatherForecastService>();
+			services.AddSingleton<RepairService>();
+			services.AddSingleton<UsersService>();
 			services.AddScoped<HttpClient>();
 
 			if(!services.Any(x => x.ServiceType == typeof(HttpClient))) {
