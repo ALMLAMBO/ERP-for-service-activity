@@ -12,6 +12,7 @@ namespace ERPForServiceActivity.Services {
 		public async void UploadRepair(string serviceName, AddRepairBindingModel repair) {
 			FirestoreDb db = connection.GetFirestoreDb();
 			int repairId = GetLastId(serviceName).Result;
+			++repairId;
 
 			CollectionReference colRef = db
 				.Collection("service-repairs");
@@ -36,11 +37,11 @@ namespace ERPForServiceActivity.Services {
 			Repair repairModel = new Repair(repair);
 			repairModel.RepairId = repairId;
 
+			UpdateRepairId(serviceName, repairId);
+
 			await db.RunTransactionAsync(async transaction => {
 				await repairsColRef.AddAsync(repairModel);
 			});
-
-			UpdateRepairId(serviceName, repair.RepairId++);
 		}
 
 		private async void UpdateRepairId(string serviceName, int id) {
