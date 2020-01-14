@@ -155,12 +155,9 @@
 	RepairService service = new RepairService();
 
 	void UploadRepair() {
-		repair.RepairId = service.GetLastId("Value").Result;
-
 		client.PostJsonAsync
 			<AddRepairBindingModel>("https://localhost:44355/api/repairs/create-repair", repair);
 
-		navMan.NavigateTo("/");
 		StateHasChanged();
 	}
 
