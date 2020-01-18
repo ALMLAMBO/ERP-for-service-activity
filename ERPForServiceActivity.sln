@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.DataF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{D58AA967-BD11-4A5D-A42E-D3CA86867C33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.API", "ERPForServiceActivity.API\ERPForServiceActivity.API.csproj", "{E111C04C-67EE-4BF5-AB6F-C906D1874284}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.API", "ERPForServiceActivity.API\ERPForServiceActivity.API.csproj", "{E111C04C-67EE-4BF5-AB6F-C906D1874284}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
