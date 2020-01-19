@@ -6,6 +6,10 @@ using System.Text;
 namespace ERPForServiceActivity.CommonModels.ViewModels.Repairs {
 	public class RepairViewModel {
 		public int RepairId { get; set; }
+
+		public string RepairStatus { get; set; }
+
+		public DateTime CreatedAt { get; set; }
 		
 		public string CustomerName { get; set; }
 		
