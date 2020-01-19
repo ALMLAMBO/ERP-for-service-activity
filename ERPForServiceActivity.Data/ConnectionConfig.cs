@@ -1,6 +1,7 @@
 ﻿using System;
 using Google.Cloud.Firestore;
 using ERPForServiceActivity.Security;
+using Google.Apis.Auth.OAuth2;
 
 namespace ERPForServiceActivity.Data {
 	public class ConnectionConfig {
@@ -8,9 +9,8 @@ namespace ERPForServiceActivity.Data {
 		private string projectId;
 
 		private void SetUp() {
-			string filepath = CommonSecurityConstants.PathToFirestoreJson;
-			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
-			projectId = "erp-for-service-activity";
+			GoogleCredential.FromFile(CommonSecurityConstants.PathToFirestoreJson);
+			projectId = CommonSecurityConstants.ProjectId;
 			database = FirestoreDb.Create(projectId);
 		}
 		
