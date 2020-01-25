@@ -1,0 +1,57 @@
+﻿@page "/all-repairs"
+@inject HttpClient client
+@inherits RepairComponent
+@using ERPForServiceActivity.App.BlazorComponents
+
+@if (allRepairs == null) {
+	<h1 class="display-1">Not init yet</h1>
+} 
+else {
+	<MatTable Items="@allRepairs" LoadInitialData="true">
+		<MatTableHeader>
+			<th>Id</th>
+			<th>Status</th>
+			<th>Warranty</th>
+			<th>Brand</th>
+			<th>Model</th>
+			<th>S/N</th>
+			<th nowrap>Product code/IMEI</th>
+			<th nowrap>Created at</th>
+			<th nowrap>Add part</th>
+			<th>Defect</th>
+			<th nowrap>Additional Information</th>
+			<th>Service</th>
+			<th>Techician</th>
+			<th nowrap>Warranty card number</th>
+			<th nowrap>Purchase date</th>
+			<th nowrap>Warranry period</th>
+			<th nowrap>Customer name</th>
+			<th nowrap>Customer address</th>
+			<th nowrap>Customer phone number</th>
+			<th>Accessories</th>
+			<th nowrap>Going to address</th>
+			<th>Seller</th>
+		</MatTableHeader>
+		<MatTableRow>
+			<td>@context.RepairId</td>
+			<td>@context.ApplianceModel</td>
+			<td>@context.ApplianceSerialNumber</td>
+			<td></td>
+		</MatTableRow>
+	</MatTable>
+}
+@code {
+	List<RepairViewModel> allRepairs = null;
+
+	protected override void OnInitialized() {
+		allRepairs = new List<RepairViewModel>();
+
+		base.OnInitialized();
+	}
+
+	protected override Task OnInitializedAsync() {
+		allRepairs = GetRepairs("Value").Result;
+
+		return base.OnInitializedAsync();
+	}
+}
