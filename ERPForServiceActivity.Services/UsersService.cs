@@ -10,8 +10,8 @@ using ERPForServiceActivity.CommonModels.BindingModels.Users;
 using ERPForServiceActivity.Models.User;
 
 namespace ERPForServiceActivity.Services {
-	public class UsersService : IUsersInterface {
-		public UsersService() {
+	public class UserService : IUserService {
+		public UserService() {
 			FirebaseApp.Create(new AppOptions() {
 				Credential = GoogleCredential.FromFile(
 					CommonSecurityConstants.PathToFirebaseAdmin)
