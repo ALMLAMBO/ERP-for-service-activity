@@ -10,7 +10,7 @@ using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
 using ERPForServiceActivity.CommonModels.ViewModels.Repairs;
 
 namespace ERPForServiceActivity.Services {
-	public class RepairService : IRepairInterface {
+	public class RepairService : IRepairService {
 		private ConnectionConfig connection = new ConnectionConfig();
 
 		public async void UploadRepair(string serviceName, AddRepairBindingModel repair) {
