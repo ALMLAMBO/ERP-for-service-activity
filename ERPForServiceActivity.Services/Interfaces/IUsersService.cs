@@ -4,7 +4,7 @@ using ERPForServiceActivity.CommonModels.BindingModels.Users;
 using ERPForServiceActivity.Models.User;
 
 namespace ERPForServiceActivity.Services.Interfaces {
-	public interface IUsersInterface {
+	public interface IUserService {
 		public void AddUser(AddUserBindingModel userToAdd);
 
 		public Task<UserRecord> GetUserData(string uid);
