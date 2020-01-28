@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using ERPForServiceActivity.App.Areas.Identity;
 using ERPForServiceActivity.App.Data;
 using ERPForServiceActivity.Services;
+using ERPForServiceActivity.Services.Interfaces;
 
 namespace ERPForServiceActivity.App {
 	public class Startup {
@@ -34,8 +35,8 @@ namespace ERPForServiceActivity.App {
 			services.AddServerSideBlazor();
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 			services.AddSingleton<WeatherForecastService>();
-			services.AddSingleton<RepairService>();
-			services.AddSingleton<UsersService>();
+			services.AddSingleton<IRepairService, RepairService>();
+			services.AddSingleton<IUserService, UserService>();
 			services.AddScoped<HttpClient>();
 
 			if(!services.Any(x => x.ServiceType == typeof(HttpClient))) {
