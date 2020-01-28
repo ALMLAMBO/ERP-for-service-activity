@@ -10,10 +10,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="BindingModels\WarehouseParts\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj" />
 	  <ProjectReference Include="..\ERPForServiceActivity.Security\ERPForServiceActivity.Security.csproj" />
 	</ItemGroup>
