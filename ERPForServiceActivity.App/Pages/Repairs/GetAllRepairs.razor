@@ -5,6 +5,7 @@
 	<MatTableHeader>
 		<th>Id</th>
 		<th>Status</th>
+		<th>Statuses</th>
 		<th>Warranty</th>
 		<th>Brand</th>
 		<th>Model</th>
@@ -29,13 +30,20 @@
 	<MatTableRow>
 		<td>@context.RepairId</td>
 		<td>@context.RepairStatus</td>
+		<td>
+			<MatSelect Label="Choose status" @bind-Value="@context.RepairStatus">
+				@foreach(string status in CommonConstants.Statuses) {
+					<MatOptionString Value="@status">@status</MatOptionString>
+				}
+			</MatSelect>
+		</td>
 		<td>@context.InWarranty</td>
 		<td>@context.ApplianceBrand</td>
 		<td>@context.ApplianceModel</td>
 		<td>@context.ApplianceSerialNumber</td>
 		<td>@context.ApplianceProductCodeOrImei</td>
 		<td>@context.CreatedAt</td>
-		<td><MatButton>Add part</MatButton></td>
+		<td><MatButton @onclick="@(() => { popupVisible = true; })">Add part</MatButton></td>
 		<td>@context.DefectByCustomer</td>
 		<td>@context.AdditionalInformation</td>
 		<td></td>
@@ -52,12 +60,44 @@
 	</MatTableRow>
 </MatTable>
 
+<MatDialog @bind-IsOpen="@popupVisible">
+	<MatDialogTitle>
+
+	</MatDialogTitle>
+	
+	<MatDialogContent>
+		<MatTextField Label="Part number"
+					  @bind-Value ="@part.PartNumber" />
+
+		<MatTextField Label="Description"
+					  @bind-Value="@part.Description" />
+
+		<MatFileUpload OnChange="ShowPicture"></MatFileUpload>
+	</MatDialogContent>
+
+	<MatDialogActions>
+		<MatButton @onclick="(() => { popupVisible = false; })">Save</MatButton>
+		<MatButton @onclick="(() => { popupVisible = false; })">Cancel</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
 @code {
 	List<RepairViewModel> allRepairs;
+	AddPartToRepairBindingModel part = new AddPartToRepairBindingModel();
+	bool popupVisible = false;
 
 	protected override async Task OnInitializedAsync() {
 		allRepairs = await Task.Run(() => {
 			return service.GetAllRepairs("Value").Result;
 		});
+	}
+
+	public void ShowPicture(IMatFileUploadEntry[] files) {
+
+	}
+
+
+	public void AddToRepair() {
+
 	}
 }
