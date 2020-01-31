@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using ERPForServiceActivity.Common;
 
 namespace ERPForServiceActivity.CommonModels.ViewModels.Repairs {
 	public class RepairViewModel {
 		public int RepairId { get; set; }
 
 		public string RepairStatus { get; set; }
+
+		public List<string> Statuses { get; set; } = CommonConstants.Statuses;
+
+		public List<string> Parts { get; set; } = new List<string>();
 
 		public DateTime CreatedAt { get; set; }
 		
