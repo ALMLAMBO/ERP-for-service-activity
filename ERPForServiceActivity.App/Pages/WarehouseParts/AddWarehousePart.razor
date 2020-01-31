@@ -1,0 +1,57 @@
+﻿@page "/add-warehouse-part"
+@inject HttpClient client
+
+<p>
+	<MatTextField Label="Part number" 
+				  @bind-Value="@part.PartNumber" />
+</p>
+
+<p>
+	<MatTextField Label="Model"
+				  @bind-Value="@part.Model" />
+</p>
+
+<p>
+	<MatTextField Label="Description"
+				  @bind-Value="@part.Description" />
+</p>
+
+<p>
+	<MatTextField Label="Brand"
+				  @bind-Value="@part.Brand" />
+</p>
+
+<p>
+	<MatTextField Label="Invoice number"
+				  @bind-Value="@part.Invoice" />
+</p>
+
+<p>
+	<MatDatePicker Label="Date of receiving invoice"
+				   @bind-Value="@part.InvoiceDate" />
+</p>
+
+<p>
+	<MatTextField Label="Price"
+				  TValue="double"
+				  @bind-Value="@part.Price"/>
+</p>
+
+<p>
+	<MatButton @onclick="AddPartToWarehouse">Add part to warehouse</MatButton>
+</p>
+
+@code {
+	AddWarehousePartBindingModel part = new AddWarehousePartBindingModel();
+
+	void AddPartToWarehouse() {
+		part.Availability = 1;
+		part.ReceivedDate = DateTime.UtcNow;
+		part.InvoiceDate = part.InvoiceDate.ToUniversalTime();
+		part.SubstituteParts = new List<string>();
+
+		client.PostJsonAsync(
+			"https://localhost:44355/api/warehouse-parts/add-part/Value", 
+			part);
+	}
+}
