@@ -37,6 +37,7 @@ namespace ERPForServiceActivity.App {
 			services.AddSingleton<WeatherForecastService>();
 			services.AddSingleton<IRepairService, RepairService>();
 			services.AddSingleton<IUserService, UserService>();
+			services.AddSingleton<IWarehousePartService, WarehousePartService>();
 			services.AddScoped<HttpClient>();
 
 			if(!services.Any(x => x.ServiceType == typeof(HttpClient))) {
