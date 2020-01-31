@@ -23,7 +23,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.WarehouseParts {
 		public List<string> SubstituteParts { get; set; }
 
 		[Required]
-		public decimal Price { get; set; }
+		public double Price { get; set; }
 
 		[Required]
 		public string Invoice { get; set; }
