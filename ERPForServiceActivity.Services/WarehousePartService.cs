@@ -27,8 +27,8 @@ namespace ERPForServiceActivity.Services {
 				Price = model.Price,
 				SubstituteParts = model.SubstituteParts,
 				Invoice = model.Invoice,
-				InvoiceDate = model.InvoiceDate,
-				ReceivedDate = DateTime.UtcNow
+				InvoiceDate = model.InvoiceDate.ToUniversalTime(),
+				ReceivedDate = DateTime.UtcNow.ToUniversalTime()
 			};
 
 			CollectionReference colRef = db
