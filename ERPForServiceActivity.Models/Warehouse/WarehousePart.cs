@@ -32,6 +32,9 @@ namespace ERPForServiceActivity.Models.Warehouse {
 		[FirestoreProperty]
 		public List<string> SubstituteParts { get; set; }
 
+		[FirestoreProperty]
+		public List<string> SubstituteModels { get; set; }
+
 		[Required]
 		[FirestoreProperty]
 		public double Price { get; set; }
