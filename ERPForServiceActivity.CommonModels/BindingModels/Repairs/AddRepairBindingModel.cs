@@ -11,15 +11,21 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		public int RepairId { get; set; }
 
 		[Required]
+		[MaxLength(30)]
+		[RegularExpression("[a-z][A-Z][а-я][А-Я]")]
 		public string CustomerName { get; set; }
 
 		[Required]
+		[MaxLength(100)]
 		public string CustomerAddress { get; set; }
 		
 		[Required]
+		[MaxLength(15)]
+		[RegularExpression("[0-9]")]
 		public string CustomerPhoneNumber { get; set; }
 
 		[Required]
+		[MaxLength(100)]
 		public string DefectByCustomer { get; set; }
 
 		[Required]
@@ -29,27 +35,34 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		public bool InWarranty { get; set; }
 
 		[Required]
+		[MaxLength(15)]
 		public string ApplianceBrand { get; set; }
 
 		[Required]
+		[MaxLength(15)]
 		public string ApplianceType { get; set; }
 
 		[Required]
+		[MaxLength(20)]
 		public string ApplianceModel { get; set; }
 
 		[Required]
+		[MaxLength(30)]
 		public string ApplianceSerialNumber { get; set; }
 
-		[Required]
+		[MaxLength(30)]
 		public string ApplianceProductCodeOrImei { get; set; }
 
 		[Required]
+		[MaxLength(150)]
 		public string ApplianceEquipment { get; set; }
 
 		[Required]
+		[MaxLength(30)]
 		public string BoughtFrom { get; set; }
 
 		[Required]
+		[MaxLength(20)]
 		public string WarrantyCardNumber { get; set; }
 
 		[Required]
@@ -59,6 +72,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		[DataType(DataType.Date)]
 		public DateTime BoughtAt { get; set; }
 
+		[MaxLength(500)]
 		public string AdditionalInformation { get; set; }
 	}
 }
