@@ -18,14 +18,14 @@ namespace ERPForServiceActivity.CommonModels.ViewModels.Warehouse {
 		
 		public List<string> SubstituteParts { get; set; }
 		
-		public decimal Price { get; set; }
+		public List<string> SubstituteModels { get; set; }
+
+		public double Price { get; set; }
 		
 		public string Invoice { get; set; }
 		
 		public DateTime InvoiceDate { get; set; }
 		
 		public DateTime ReceivedDate { get; set; }
-
-		public List<string> Statuses { get; set; } = CommonConstants.Statuses;
 	}
 }
