@@ -20,7 +20,9 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.WarehouseParts {
 		[Required]
 		public string Brand { get; set; }
 
-		public List<string> SubstituteParts { get; set; }
+		public List<string> SubstituteParts { get; set; } = new List<string>();
+
+		public List<string> SubstituteModels { get; set; } = new List<string>();
 
 		[Required]
 		public double Price { get; set; }
