@@ -9,16 +9,14 @@ namespace ERPForServiceActivity.CommonModels.ViewModels.Warehouse {
 		public string PartNumber { get; set; }
 		
 		public int Availability { get; set; }
-		
-		public string Model { get; set; }
+
+		public List<string> Model { get; set; } = new List<string>();
 		
 		public string Description { get; set; }
 		
 		public string Brand { get; set; }
 		
 		public List<string> SubstituteParts { get; set; }
-		
-		public List<string> SubstituteModels { get; set; }
 
 		public double Price { get; set; }
 		
