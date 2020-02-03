@@ -12,7 +12,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.WarehouseParts {
 		public int Availability { get; set; }
 
 		[Required]
-		public string Model { get; set; }
+		public List<string> Model { get; set; } = new List<string>();
 
 		[Required]
 		public string Description { get; set; }
@@ -21,8 +21,6 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.WarehouseParts {
 		public string Brand { get; set; }
 
 		public List<string> SubstituteParts { get; set; } = new List<string>();
-
-		public List<string> SubstituteModels { get; set; } = new List<string>();
 
 		[Required]
 		public double Price { get; set; }
