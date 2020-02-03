@@ -1,0 +1,61 @@
+﻿@page "/all-warehouse-parts"
+@inject IWarehousePartService service
+
+<MatTable Items="@allWarehouseParts"
+		  TableItem="WarehousePartViewModel">
+	
+	<MatTableHeader>
+		<th>Part number</th>
+		<th>Availability</th>
+		<th>For models</th>
+		<th>Description</th>
+		<th>Brand</th>
+		<th>Substitute parts</th>
+		<th>Price</th>
+		<th>Invoice</th>
+		<th>Invoice date</th>
+		<th>Received date</th>
+	</MatTableHeader>
+
+	<MatTableRow>
+		<td>@context.PartNumber</td>
+		<td>@context.Availability</td>
+		<td>
+			<MatSelect Label="Suitable For" @bind-Value="@str">
+				@foreach (string s in context.Model) {
+					<MatOptionString Value="@s">@s</MatOptionString>
+				}
+			</MatSelect>
+		</td>
+		<td>@context.Description</td>
+		<td>@context.Brand</td>
+		<td>
+			@if (context.SubstituteParts.Count != 0) {
+				<MatSelect Label="Substitute Parts" @bind-Value="@str2">
+					@foreach (string s in context.SubstituteParts) {
+						<MatOptionString Value="@s">@s</MatOptionString>
+					}
+				</MatSelect>
+			}
+			else {
+				<h5>There are no substitute parts</h5>
+			}
+		</td>
+		<td>@context.Price</td>
+		<td>@context.Invoice</td>
+		<td>@context.InvoiceDate</td>
+		<td>@context.ReceivedDate</td>
+	</MatTableRow>
+</MatTable>
+
+@code {
+	List<WarehousePartViewModel> allWarehouseParts;
+	string str = string.Empty;
+	string str2 = string.Empty;
+
+	protected override async Task OnInitializedAsync() {
+		allWarehouseParts = await Task.Run(() => {
+			return service.GetAllParts("Value").Result;
+		});
+	}
+}
