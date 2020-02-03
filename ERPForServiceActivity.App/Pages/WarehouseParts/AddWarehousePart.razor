@@ -8,7 +8,7 @@
 
 <p>
 	<MatTextField Label="Model"
-				  @bind-Value="@part.Model" />
+				  @bind-Value="@newModel" />
 </p>
 
 <p>
@@ -19,6 +19,11 @@
 <p>
 	<MatTextField Label="Brand"
 				  @bind-Value="@part.Brand" />
+</p>
+
+<p>
+	<MatTextField Label="Substitute Part"
+				  @bind-Value="@substitutePart" />
 </p>
 
 <p>
@@ -43,15 +48,22 @@
 
 @code {
 	AddWarehousePartBindingModel part = new AddWarehousePartBindingModel();
+	string substitutePart = string.Empty;
+	string newModel = string.Empty;
 
 	void AddPartToWarehouse() {
 		part.Availability = 1;
 		part.ReceivedDate = DateTime.UtcNow;
 		part.InvoiceDate = part.InvoiceDate.ToUniversalTime();
 		part.SubstituteParts = new List<string>();
+		part.Model = new List<string>();
+		part.Model.Add(newModel);
+		if(!string.IsNullOrEmpty(substitutePart)) {
+			part.SubstituteParts.Add(substitutePart);
+		}
 
 		client.PostJsonAsync(
-			"https://localhost:44355/api/warehouse-parts/add-part/Value", 
+			"https://localhost:44355/api/warehouse-parts/add-part/Value",
 			part);
 	}
 }
