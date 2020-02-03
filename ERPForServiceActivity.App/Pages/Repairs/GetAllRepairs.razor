@@ -1,7 +1,9 @@
 ﻿@page "/all-repairs"
 @inject IRepairService service
 
-<MatTable Items="@allRepairs">
+<MatTable Items="@allRepairs" 
+		  TableItem="RepairViewModel">
+	
 	<MatTableHeader>
 		<th>Id</th>
 		<th>Status</th>
@@ -85,6 +87,7 @@
 	List<RepairViewModel> allRepairs;
 	AddPartToRepairBindingModel part = new AddPartToRepairBindingModel();
 	bool popupVisible = false;
+	bool repairCard = false;
 
 	protected override async Task OnInitializedAsync() {
 		allRepairs = await Task.Run(() => {
@@ -99,5 +102,9 @@
 
 	public void AddToRepair() {
 
+	}
+
+	void OpenRepairCard() {
+		repairCard = true; 
 	}
 }
