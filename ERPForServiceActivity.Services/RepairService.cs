@@ -1,13 +1,21 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using MatBlazor;
+using Google.Cloud.Storage;
+using Google.Cloud.Vision.V1;
 using Google.Cloud.Firestore;
 using ERPForServiceActivity.Data;
 using ERPForServiceActivity.Models.Repairs;
 using ERPForServiceActivity.Services.Interfaces;
 using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
 using ERPForServiceActivity.CommonModels.ViewModels.Repairs;
+using ERPForServiceActivity.Security;
 
 namespace ERPForServiceActivity.Services {
 	public class RepairService : IRepairService {
@@ -15,10 +23,10 @@ namespace ERPForServiceActivity.Services {
 
 		public async void UploadRepair(string serviceName, AddRepairBindingModel repair) {
 			FirestoreDb db = connection.GetFirestoreDb();
-			int repairId = GetLastId(serviceName).Result;
-			++repairId;
 
-			string docId = GetDocumentId("service-repairs", serviceName).Result;
+			string docId =
+				GetDocumentId("service-repairs", serviceName)
+				.Result;
 
 			CollectionReference repairsColRef = db
 				.Collection("service-repairs")
@@ -26,11 +34,10 @@ namespace ERPForServiceActivity.Services {
 				.Collection("repairs");
 
 			Repair repairModel = new Repair(repair);
-			repairModel.RepairId = repairId;
-
-			UpdateRepairId(serviceName, repairId);
+			repairModel.RepairId = repair.RepairId;
 
 			await db.RunTransactionAsync(async transaction => {
+				UpdateRepairId(serviceName, repair.RepairId);
 				await repairsColRef.AddAsync(repairModel);
 			});
 		}
@@ -139,6 +146,86 @@ namespace ERPForServiceActivity.Services {
 			return repairs
 				.OrderBy(x => x.RepairId)
 				.ToList();
+		}
+
+		public void SaveImageToTemp(IMatFileUploadEntry file) {
+			Bitmap bitmap = ConvertToBitmap(file);
+
+			bitmap.Save(CommonSecurityConstants
+				.PathToTempFolder + @$"\SN\{file.Name
+					.ToLower().Replace(" ", "-")}.jpeg",
+				ImageFormat.Jpeg);
+		}
+
+		public Bitmap ConvertToBitmap(IMatFileUploadEntry file) {
+			MemoryStream stream = new MemoryStream();
+			file.WriteToStreamAsync(stream);
+
+			return new Bitmap(stream);
+		}
+
+		public void MoveImageToOriginalDirectory(Bitmap bitmap) {
+			
+		}
+
+		public void SaveMultipleImagesToTemp(IMatFileUploadEntry[] files) {
+			foreach (IMatFileUploadEntry file in files) {
+				SaveImageToTemp(file);
+			}
+		}
+
+		public void MoveMultipleImagesToOriginalDirectory(Bitmap[] bitmaps) {
+			
+		}
+
+		public Bitmap[] ConvertMultipleToBitmap(IMatFileUploadEntry[] files) {
+			Bitmap[] bitmaps = new Bitmap[files.Length];
+
+			for (int i = 0; i < files.Length; i++) {
+				bitmaps[i] = ConvertToBitmap(files[i]);
+			}
+
+			return bitmaps;
+		}
+
+		public ResultFromOCRBindingModel GetData(
+			ResultFromOCRBindingModel model, IMatFileUploadEntry file) {
+			
+			ResultFromOCRBindingModel result = 
+				new ResultFromOCRBindingModel();
+
+			Regex snRegex = SerialNumberRegexes
+				.GetSNRegex(model.ApplianceBrand);
+
+			Regex modelRegex = LGModels
+				.GetModelRegex(model.ApplianceType);
+			
+			ImageAnnotatorClient client = 
+				ImageAnnotatorClient.Create();
+
+			MemoryStream stream = new MemoryStream();
+			file.WriteToStreamAsync(stream);
+
+			Google.Cloud.Vision.V1.Image image = 
+				Google.Cloud.Vision.V1.Image.FromStream(stream);
+
+			var annotations = client.DetectText(image);
+
+			foreach (var annotation in annotations) {
+				if(snRegex.Match(annotation.Description)
+					.Success) {
+
+					result.ApplianceSerialNumber = 
+						annotation.Description;
+				}
+				else if(modelRegex.Match(annotation.Description)
+					.Success) {
+
+					result.ApplianceModel = annotation.Description;
+				}
+			}
+
+			return result;
 		}
 	}
 }
