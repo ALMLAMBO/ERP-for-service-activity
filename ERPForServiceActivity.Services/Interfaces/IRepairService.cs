@@ -23,6 +23,9 @@ namespace ERPForServiceActivity.Services.Interfaces {
 
 		public Bitmap[] ConvertMultipleToBitmap(IMatFileUploadEntry[] files);
 
-		public ResultFromOCRBindingModel GetData(IMatFileUploadEntry file);
+		public Task<int> GetLastId(string serviceName);
+
+		public ResultFromOCRBindingModel GetData(
+			ResultFromOCRBindingModel model, IMatFileUploadEntry file);
 	}
 }
