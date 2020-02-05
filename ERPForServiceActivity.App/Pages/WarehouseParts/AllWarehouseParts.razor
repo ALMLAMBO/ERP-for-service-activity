@@ -1,7 +1,12 @@
 ﻿@page "/all-warehouse-parts"
 @inject IWarehousePartService service
 
-<MatTable Items="@allWarehouseParts"
+<MatTextField Label="Search"
+			  @bind-Value="@searchString" />
+
+<MatButton @onclick="SearchItems">Search</MatButton>
+
+<MatTable Items="@renderedParts"
 		  TableItem="WarehousePartViewModel">
 	
 	<MatTableHeader>
@@ -50,12 +55,25 @@
 
 @code {
 	List<WarehousePartViewModel> allWarehouseParts;
+	List<WarehousePartViewModel> renderedParts;
+
 	string str = string.Empty;
 	string str2 = string.Empty;
+	string searchString = string.Empty;
 
 	protected override async Task OnInitializedAsync() {
 		allWarehouseParts = await Task.Run(() => {
 			return service.GetAllParts("Value").Result;
 		});
+
+		renderedParts = new List<WarehousePartViewModel>(
+			allWarehouseParts);
+	}
+
+	public void SearchItems() {
+		renderedParts = service.SearchItems(
+			searchString, allWarehouseParts);
+
+		InvokeAsync(StateHasChanged);
 	}
 }
