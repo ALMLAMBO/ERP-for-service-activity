@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Google.Cloud.Firestore;
 using ERPForServiceActivity.Data;
 using ERPForServiceActivity.Models.Warehouse;
@@ -31,58 +32,60 @@ namespace ERPForServiceActivity.Services {
 				.GetSnapshotAsync();
 
 			if(partsWithSamePN.Documents.Count == 0) {
-				QuerySnapshot partsWithSameSPN = null; 
+				//QuerySnapshot partsWithSameSPN = null; 
 				
 				if(newPart.SubstituteParts.Count != 0) {
-					QuerySnapshot query = await colRef
-					.WhereArrayContains("SubstituteParts",
-						newPart.SubstituteParts[0])
-					.GetSnapshotAsync();
-
-					partsWithSameSPN = query;
+					//QuerySnapshot query = await colRef
+					//.WhereArrayContains("SubstituteParts",
+					//	newPart.SubstituteParts[0])
+					//.GetSnapshotAsync();
+					//
+					//partsWithSameSPN = query;
 				}
 
-				if(partsWithSameSPN == null) {
-					await RunTransaction(newPart, colRef);
-					return;
-				}
-				else {
-					WarehousePart lastPartWithSameSPN =
-						GetLastPartWithSamePnOrSpn(partsWithSameSPN);
+				//if(partsWithSameSPN == null) {
+				//	await RunTransaction(newPart, colRef);
+				//	return;
+				//}
+				//else {
+				//	WarehousePart lastPartWithSameSPN =
+				//		GetLastPartWithSamePnOrSpn(partsWithSameSPN);
+				//
+				//	newPart.SubstituteParts =
+				//		GetUniqueElements(
+				//			newPart.SubstituteParts, 
+				//			lastPartWithSameSPN.SubstituteParts);
+				//
+				//	newPart.Model =
+				//		GetUniqueElements(
+				//			newPart.Model,
+				//			lastPartWithSameSPN.Model);
+				//
+				//	List<WarehousePart> parts = new List<WarehousePart>();
+				//	foreach (DocumentSnapshot ds in 
+				//		partsWithSameSPN.Documents) {
+				//
+				//		if (!ds.ConvertTo<WarehousePart>()
+				//			.Equals(lastPartWithSameSPN)) {
+				//
+				//			parts.Add(ds.ConvertTo<WarehousePart>());
+				//		}
+				//	}
+				//
+				//	lastPartWithSameSPN.SubstituteParts = 
+				//		newPart.SubstituteParts;
+				//
+				//	lastPartWithSameSPN.Model =
+				//		newPart.Model;
+				//
+				//	await RunTransaction(newPart, colRef);
+				//
+				//	UpdateAllRecordsWithSamePnOrSPN(
+				//		lastPartWithSameSPN, 
+				//		colRef, partsWithSameSPN);
+				//}
 
-					newPart.SubstituteParts =
-						GetUniqueElements(
-							newPart.SubstituteParts, 
-							lastPartWithSameSPN.SubstituteParts);
-
-					newPart.Model =
-						GetUniqueElements(
-							newPart.Model,
-							lastPartWithSameSPN.Model);
-
-					List<WarehousePart> parts = new List<WarehousePart>();
-					foreach (DocumentSnapshot ds in 
-						partsWithSameSPN.Documents) {
-
-						if (!ds.ConvertTo<WarehousePart>()
-							.Equals(lastPartWithSameSPN)) {
-
-							parts.Add(ds.ConvertTo<WarehousePart>());
-						}
-					}
-
-					lastPartWithSameSPN.SubstituteParts = 
-						newPart.SubstituteParts;
-
-					lastPartWithSameSPN.Model =
-						newPart.Model;
-
-					await RunTransaction(newPart, colRef);
-
-					UpdateAllRecordsWithSamePnOrSPN(
-						lastPartWithSameSPN, 
-						colRef, partsWithSameSPN);
-				}
+				await RunTransaction(newPart, colRef);
 			}
 			else {
 				WarehousePart lastPartWithSamePN =
@@ -217,6 +220,72 @@ namespace ERPForServiceActivity.Services {
 				InvoiceDate = ds.GetValue<DateTime>("InvoiceDate"),
 				ReceivedDate = ds.GetValue<DateTime>("ReceivedDate")
 			};
+		}
+
+		public List<WarehousePartViewModel> SearchItems(
+			string data, List<WarehousePartViewModel> parts) {
+			
+			List<WarehousePartViewModel> result = 
+				new List<WarehousePartViewModel>();
+
+			Regex regex;
+			string searchData = string.Empty;
+			if(data.StartsWith("*") && 
+				data.EndsWith("*")) {
+
+				searchData = data.Substring(1, data.Length - 2);
+				regex = new Regex($".*{searchData}.*");
+			}
+			else if(data.StartsWith("*")) {
+				searchData = data.Substring(1);
+				regex = new Regex($".*{searchData}");
+			}
+			else if(data.EndsWith("*")) {
+				searchData = data.Substring(0, data.Length - 1);
+				regex = new Regex($"{searchData}.*");
+			}
+			else if(data.IndexOf("*") != 0 && 
+				data.LastIndexOf("*") != data.Length - 1) {
+
+				searchData = data.Substring(
+					data.IndexOf("*"), data.LastIndexOf("*"));
+
+				regex = new Regex($".*{searchData}.*");
+			}
+			else {
+				regex = new Regex(data);
+			}
+
+			result = parts
+				.Where(part => regex.Match(part.PartNumber).Success)
+				.ToList();
+
+			if(result.Count == 0) {
+				result = parts
+					.Where(part => part.Model
+						.Any(str => regex.Match(str).Success))
+					.ToList();
+
+				if(result.Count == 0) {
+					result = parts
+						.Where(part => part.SubstituteParts
+							.Any(str => regex.Match(str).Success))
+						.ToList();
+
+					if(result.Count == 0) {
+						result = new List<WarehousePartViewModel>();
+					}
+				}
+			}
+			else {
+				result.AddRange(parts
+					.Where(part => part.SubstituteParts
+					.Any(str => regex.Match(str).Success))
+					.ToList()
+				);
+			}
+
+			return result;
 		}
 	}
 }
