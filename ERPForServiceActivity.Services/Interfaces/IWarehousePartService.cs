@@ -11,5 +11,8 @@ namespace ERPForServiceActivity.Services.Interfaces {
 			string serviceName);
 
 		public Task<List<WarehousePartViewModel>> GetAllParts(string serviceName);
+
+		public List<WarehousePartViewModel> SearchItems(
+			string data, List<WarehousePartViewModel> parts);
 	}
 }
