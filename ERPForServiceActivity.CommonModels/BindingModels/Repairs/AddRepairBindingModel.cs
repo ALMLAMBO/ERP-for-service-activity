@@ -1,9 +1,9 @@
-﻿using BlazorInputFile;
-using System;
+﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using MatBlazor;
 
 namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 	public class AddRepairBindingModel {
@@ -12,7 +12,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 
 		[Required]
 		[MaxLength(30)]
-		[RegularExpression("[a-z][A-Z][а-я][А-Я]")]
+		//[RegularExpression("[a-zA-Zа-яА-Я]+/g")]
 		public string CustomerName { get; set; }
 
 		[Required]
@@ -21,7 +21,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		
 		[Required]
 		[MaxLength(15)]
-		[RegularExpression("[0-9]")]
+		//[RegularExpression("[0-9]+/g")]
 		public string CustomerPhoneNumber { get; set; }
 
 		[Required]
@@ -74,5 +74,10 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 
 		[MaxLength(500)]
 		public string AdditionalInformation { get; set; }
+
+		//[Required]
+		public IMatFileUploadEntry ModelSNImage { get; set; }
+
+		public IMatFileUploadEntry[] OtherImages { get; set; }
 	}
 }
