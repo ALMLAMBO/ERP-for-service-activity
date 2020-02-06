@@ -12,7 +12,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 
 		[Required]
 		[MaxLength(30)]
-		//[RegularExpression("[a-zA-Zа-яА-Я]+/g")]
+		[RegularExpression(".*[a-zA-Zа-яА-Я].*")]
 		public string CustomerName { get; set; }
 
 		[Required]
@@ -74,6 +74,8 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 
 		[MaxLength(500)]
 		public string AdditionalInformation { get; set; }
+
+		public bool Cancelled { get; set; }
 
 		//[Required]
 		public IMatFileUploadEntry ModelSNImage { get; set; }
