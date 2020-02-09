@@ -15,7 +15,7 @@ namespace ERPForServiceActivity.Services.Interfaces {
 		public Bitmap ConvertToBitmap(IMatFileUploadEntry file);
 
 		public void MoveImageToOriginalDirectory(
-			string path, int id);
+			string path);
 
 		public void SaveImageToTemp(
 			IMatFileUploadEntry file, string path);
@@ -24,7 +24,7 @@ namespace ERPForServiceActivity.Services.Interfaces {
 			IMatFileUploadEntry[] files);
 
 		public void MoveMultipleImagesToOriginalDirectory(
-			string path, int id);
+			string path);
 
 		public void SaveMultipleImagesToTemp(
 			IMatFileUploadEntry[] files, string path);
