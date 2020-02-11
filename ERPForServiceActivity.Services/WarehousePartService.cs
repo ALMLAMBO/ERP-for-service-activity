@@ -250,6 +250,18 @@ namespace ERPForServiceActivity.Services {
 				searchData = data.Substring(1, data.Length - 2);
 				regex = new Regex($".*{searchData}.*");
 			} 
+			else if (data.StartsWith("*") && starsIndexes
+				.ToList().Where(c => c == '*')
+				.Count() < 2) {
+				searchData = data.Substring(1);
+				regex = new Regex($".*{searchData}");
+			} 
+			else if (data.EndsWith("*") && starsIndexes
+				.ToList().Where(c => c == '*')
+				.Count() < 2) {
+				searchData = data.Substring(0, data.Length - 1);
+				regex = new Regex($"{searchData}.*");
+			} 
 			else if (starsIndexes.Length >= 3) {
 				string regexPattern = string.Empty;
 
@@ -264,21 +276,7 @@ namespace ERPForServiceActivity.Services {
 					}
 				}
 
-				//int lastSectionBegin = starsIndexes[starsIndexes.Length - 2];
-				//int lastSectionEnd = starsIndexes[starsIndexes.Length - 1];
-				//int lastSectionLen = lastSectionEnd - lastSectionBegin;
-				//
-				//regexPattern += $".*{data.Substring(lastSectionBegin)}.*";
-
 				regex = new Regex(regexPattern);
-			}
-			else if(data.StartsWith("*")) {
-				searchData = data.Substring(1);
-				regex = new Regex($".*{searchData}");
-			}
-			else if(data.EndsWith("*")) {
-				searchData = data.Substring(0, data.Length - 1);
-				regex = new Regex($"{searchData}.*");
 			}
 			else if(data.IndexOf("*") != 0 && 
 				data.LastIndexOf("*") != data.Length - 1) {
