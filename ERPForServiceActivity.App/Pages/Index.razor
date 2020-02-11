@@ -1,5 +1,61 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<MatButton @onclick=
+		   "@(() => { showCustomerLogin = true; })">
+	Customer login
+</MatButton>
+<MatButton @onclick=
+		   "@(() => { showPersonalLogin = true; })">
+	Services login
+</MatButton>
 
-Welcome to your new app.
+<MatDialog @bind-IsOpen="@showCustomerLogin">
+	<MatDialogTitle>
+		Check repair status
+	</MatDialogTitle>
+	<MatDialogContent>
+		<MatTextField Label="Customer name"
+					  @bind-Value="@repair.ApplianceBrand"/>
+
+		<MatTextField Label="Reclaim number"
+					  @bind-Value="@repair.ApplianceEquipment"/>
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick=
+				   "@(() => { showCustomerLogin = false; })">Check</MatButton>
+		
+		<MatButton @onclick=
+				   "@(() => { showCustomerLogin = false; })">Cancel</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@showPersonalLogin">
+	<MatDialogTitle>
+		Services login
+	</MatDialogTitle>
+	<MatDialogContent>
+		<MatTextField Label="Username"
+					  @bind-Value="@repair.CustomerAddress"/>
+
+		<MatTextField Label="Password"
+					  Type="passowrd"
+					  @bind-Value="@repair.CustomerName"/>
+
+		<MatTextField Label="Verification code"
+					  @bind-Value="@repair.DefectByCustomer"/>
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick=
+				   "@(() => { showPersonalLogin = false; })">Login</MatButton>
+
+		<MatButton @onclick=
+				   "@(() => { showPersonalLogin = false; })">Cancel</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
+@code {
+	bool showCustomerLogin = false;
+	bool showPersonalLogin = false;
+	AddRepairBindingModel repair = 
+		new AddRepairBindingModel();
+}
