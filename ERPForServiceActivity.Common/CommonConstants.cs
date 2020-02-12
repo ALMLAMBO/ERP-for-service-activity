@@ -30,5 +30,12 @@ namespace ERPForServiceActivity.Common {
 			"Repair completed / Awaiting customer",
 			"Transported to customer"
 		};
+
+		public static List<string> Checkups = new List<string>() {
+			"Technician labor",
+			"Service orders",
+			"Labor OOW",
+			"Used parts in repairs"
+		};
 	}
 }
