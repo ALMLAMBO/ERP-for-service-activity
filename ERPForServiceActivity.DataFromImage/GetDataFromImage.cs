@@ -26,14 +26,6 @@ namespace ERPForServiceActivity.DataFromImage {
 			var response = GetImageData();
 			string serialNumber = "";
 
-			foreach (var annotation in response) {
-				Match snMatch = CommonSecurityConstants
-					.getLGSerialNumber.Match(annotation.Description);
-
-				if(snMatch.Success) {
-					serialNumber = annotation.Description;
-				}
-			}
 
 			return serialNumber;
 		}
