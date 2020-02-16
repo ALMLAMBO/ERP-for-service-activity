@@ -19,6 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ERPForServiceActivity.API\ERPForServiceActivity.API.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.DataFromImage\ERPForServiceActivity.DataFromImage.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.Data\ERPForServiceActivity.Data.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.Models\ERPForServiceActivity.Models.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.Security\ERPForServiceActivity.Security.csproj" />
     <ProjectReference Include="..\ERPForServiceActivity.Services\ERPForServiceActivity.Services.csproj" />
   </ItemGroup>
 
