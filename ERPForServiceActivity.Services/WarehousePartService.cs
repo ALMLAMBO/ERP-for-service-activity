@@ -31,82 +31,83 @@ namespace ERPForServiceActivity.Services {
 				.WhereEqualTo("PartNumber", newPart.PartNumber)
 				.GetSnapshotAsync();
 
-			if(partsWithSamePN.Documents.Count == 0) {
-				//QuerySnapshot partsWithSameSPN = null; 
-				
-				if(newPart.SubstituteParts.Count != 0) {
-					//QuerySnapshot query = await colRef
-					//.WhereArrayContains("SubstituteParts",
-					//	newPart.SubstituteParts[0])
-					//.GetSnapshotAsync();
-					//
-					//partsWithSameSPN = query;
+			if(partsWithSamePN.Count == 0) {
+				QuerySnapshot partsWithSameSPN = await colRef
+					.WhereArrayContains(
+						"SubstituteParts", newPart.PartNumber)
+					.GetSnapshotAsync();
+
+				if(partsWithSameSPN.Count == 0) {
+					
 				}
+				else {
+					WarehousePart lastPartWithSameSPN =
+						GetLastPartWithSamePnOrSpn(partsWithSameSPN);
 
-				//if(partsWithSameSPN == null) {
-				//	await RunTransaction(newPart, colRef);
-				//	return;
-				//}
-				//else {
-				//	WarehousePart lastPartWithSameSPN =
-				//		GetLastPartWithSamePnOrSpn(partsWithSameSPN);
-				//
-				//	newPart.SubstituteParts =
-				//		GetUniqueElements(
-				//			newPart.SubstituteParts, 
-				//			lastPartWithSameSPN.SubstituteParts);
-				//
-				//	newPart.Model =
-				//		GetUniqueElements(
-				//			newPart.Model,
-				//			lastPartWithSameSPN.Model);
-				//
-				//	List<WarehousePart> parts = new List<WarehousePart>();
-				//	foreach (DocumentSnapshot ds in 
-				//		partsWithSameSPN.Documents) {
-				//
-				//		if (!ds.ConvertTo<WarehousePart>()
-				//			.Equals(lastPartWithSameSPN)) {
-				//
-				//			parts.Add(ds.ConvertTo<WarehousePart>());
-				//		}
-				//	}
-				//
-				//	lastPartWithSameSPN.SubstituteParts = 
-				//		newPart.SubstituteParts;
-				//
-				//	lastPartWithSameSPN.Model =
-				//		newPart.Model;
-				//
-				//	await RunTransaction(newPart, colRef);
-				//
-				//	UpdateAllRecordsWithSamePnOrSPN(
-				//		lastPartWithSameSPN, 
-				//		colRef, partsWithSameSPN);
-				//}
+					newPart.Model =
+						GetUniqueElements(
+							newPart.Model,
+							lastPartWithSameSPN.Model);
 
-				await RunTransaction(newPart, colRef);
+					newPart.SubstituteParts =
+						GetUniqueElements(
+							newPart.SubstituteParts,
+							lastPartWithSameSPN.SubstituteParts);
+
+					partsWithSameSPN.Documents
+						.ToList()
+						.ForEach(async x => {
+							WarehousePart p =
+								x.ConvertTo<WarehousePart>();
+
+							p.Model = newPart.Model;
+							p.SubstituteParts = 
+								newPart.SubstituteParts;
+
+							Dictionary<string, object> partAsDictionary =
+								ConvertPartToDictionary(p);
+
+							await db.RunTransactionAsync(async t => {
+								await x.Reference
+									.UpdateAsync(partAsDictionary);
+							});
+						});
+				}
 			}
 			else {
 				WarehousePart lastPartWithSamePN =
 					GetLastPartWithSamePnOrSpn(partsWithSamePN);
-
-				newPart.SubstituteParts =
-						GetUniqueElements(
-							newPart.SubstituteParts,
-							lastPartWithSamePN.SubstituteParts);
 
 				newPart.Model =
 					GetUniqueElements(
 						newPart.Model,
 						lastPartWithSamePN.Model);
 
-				newPart.Availability = partsWithSamePN.Count + 1;
+				newPart.SubstituteParts =
+					GetUniqueElements(
+						newPart.SubstituteParts,
+						lastPartWithSamePN.SubstituteParts);
 
-				await RunTransaction(newPart, colRef);
-				
-				UpdateAllRecordsWithSamePnOrSPN(
-					newPart, colRef, partsWithSamePN);
+				partsWithSamePN.Documents
+					.ToList()
+					.ForEach(async x => {
+						WarehousePart p = 
+							x.ConvertTo<WarehousePart>();
+
+						p.Model = newPart.Model;
+
+						p.SubstituteParts = 
+							newPart.SubstituteParts;
+
+						p.Availability = partsWithSamePN.Count + 1;
+						Dictionary<string, object> partAsDictionary =
+							ConvertPartToDictionary(p);
+
+						await db.RunTransactionAsync(async t => {
+							await x.Reference
+								.UpdateAsync(partAsDictionary);
+						});
+					});
 			}
 		}
 
@@ -119,35 +120,6 @@ namespace ERPForServiceActivity.Services {
 					ds.GetValue<DateTime>("ReceivedDate"))
 				.FirstOrDefault()
 				.ConvertTo<WarehousePart>();
-		}
-
-		private void UpdateAllRecordsWithSamePnOrSPN(
-			WarehousePart lastPartWithSameSPN, 
-			CollectionReference colRef,
-			QuerySnapshot snapshot) {
-
-			snapshot.Documents
-				.ToList()
-				.ForEach(async ds => {
-					WarehousePart part = ds
-						.ConvertTo<WarehousePart>();
-
-					part.SubstituteParts =
-						lastPartWithSameSPN.SubstituteParts;
-
-					part.Model =
-						lastPartWithSameSPN.Model;
-
-					part.Availability = 
-						lastPartWithSameSPN.Availability;
-
-					Dictionary<string, object> partAsDictionary =
-						ConvertPartToDictionary(part);
-
-					await colRef.Database.RunTransactionAsync(async t => {
-						await ds.Reference.UpdateAsync(partAsDictionary);
-					});
-				});
 		}
 
 		private Dictionary<string, object> 
@@ -193,14 +165,12 @@ namespace ERPForServiceActivity.Services {
 				.WhereGreaterThanOrEqualTo("Availability", 1);
 
 			QuerySnapshot snapshot = await query.GetSnapshotAsync();
-			foreach(DocumentSnapshot ds in snapshot.Documents) {
-				if(ds.Exists) {
-					WarehousePartViewModel part = 
+			Parallel.ForEach(snapshot.Documents, ds => {
+				WarehousePartViewModel part =
 						ConvertDsToViewModel(ds);
 
-					parts.Add(part);
-				}
-			}
+				parts.Add(part);
+			});
 
 			return parts;
 		}
