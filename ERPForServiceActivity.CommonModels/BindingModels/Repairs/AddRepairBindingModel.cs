@@ -2,8 +2,9 @@
 using System.Text;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using MatBlazor;
+using BlazorInputFile;
+using ERPForServiceActivity.CommonModels.Attributes;
 
 namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 	public class AddRepairBindingModel {
@@ -21,7 +22,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		
 		[Required]
 		[MaxLength(15)]
-		//[RegularExpression("[0-9]+/g")]
+		[RegularExpression(".*[0-9].*")]
 		public string CustomerPhoneNumber { get; set; }
 
 		[Required]
@@ -42,15 +43,16 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		[MaxLength(15)]
 		public string ApplianceType { get; set; }
 
-		[Required]
 		[MaxLength(20)]
+		[ConditionalRequired]
 		public string ApplianceModel { get; set; }
 
-		[Required]
 		[MaxLength(30)]
+		[ConditionalRequired]
 		public string ApplianceSerialNumber { get; set; }
 
 		[MaxLength(30)]
+		[ConditionalRequired]
 		public string ApplianceProductCodeOrImei { get; set; }
 
 		[Required]
@@ -76,10 +78,5 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		public string AdditionalInformation { get; set; }
 
 		public bool Cancelled { get; set; }
-
-		//[Required]
-		public IMatFileUploadEntry ModelSNImage { get; set; }
-
-		public IMatFileUploadEntry[] OtherImages { get; set; }
 	}
 }
