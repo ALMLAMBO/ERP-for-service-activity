@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="BlazorInputFile" Version="0.1.0-preview-00002" />
-    <PackageReference Include="Google.Cloud.Firestore" Version="2.0.0-beta01" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="1.1.0" />
+    <PackageReference Include="Google.Cloud.Vision.V1" Version="1.7.0" />
   </ItemGroup>
 
   <ItemGroup>

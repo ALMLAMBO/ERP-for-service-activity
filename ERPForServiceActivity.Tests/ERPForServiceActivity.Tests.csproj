@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Cloud.Storage.V1" Version="2.5.0" />
-    <PackageReference Include="Google.Cloud.Vision.V1" Version="2.0.0-beta01" />
+    <PackageReference Include="Google.Cloud.Vision.V1" Version="1.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.7.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -20,7 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	<PackageReference Include="Google.Cloud.Firestore" Version="2.0.0-beta01" />
+	<PackageReference Include="Google.Cloud.Firestore" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
