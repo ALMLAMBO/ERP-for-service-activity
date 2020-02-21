@@ -43,16 +43,16 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 		[MaxLength(15)]
 		public string ApplianceType { get; set; }
 
+		[Required]
 		[MaxLength(20)]
-		[ConditionalRequired]
 		public string ApplianceModel { get; set; }
 
+		[Required]
 		[MaxLength(30)]
-		[ConditionalRequired]
 		public string ApplianceSerialNumber { get; set; }
 
+		[Required]
 		[MaxLength(30)]
-		[ConditionalRequired]
 		public string ApplianceProductCodeOrImei { get; set; }
 
 		[Required]
