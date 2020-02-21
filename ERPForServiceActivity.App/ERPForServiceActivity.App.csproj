@@ -7,19 +7,21 @@
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Blazor" Version="19.1.10" />
-    <PackageReference Include="MatBlazor" Version="2.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.7.0" />
+    <PackageReference Include="MatBlazor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.2.0-preview1.20073.1" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Radzen.Blazor" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ERPForServiceActivity.API\ERPForServiceActivity.API.csproj" />
     <ProjectReference Include="..\ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj" />
     <ProjectReference Include="..\ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj" />
     <ProjectReference Include="..\ERPForServiceActivity.DataFromImage\ERPForServiceActivity.DataFromImage.csproj" />
