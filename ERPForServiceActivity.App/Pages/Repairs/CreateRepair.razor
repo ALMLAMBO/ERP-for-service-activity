@@ -1,17 +1,8 @@
-﻿@page "/CreateRepair"
-@inject NavigationManager navMan
+﻿@page "/create-repair"
 @inject HttpClient client
+@inject IRepairService service
 
-<head>
-	<style>
-		.resize {
-			resize: vertical;
-		}
-	</style>
-</head>
-
-
-<EditForm Model="@repair">
+<EditForm Model="@repair" OnValidSubmit="UploadRepair" >
 	<DataAnnotationsValidator />
 
 	<div class="mat-layout-grid">
@@ -45,7 +36,6 @@
 				<p>
 					<MatTextField Label="Phone Number"
 								  Outlined="true"
-								  Type="number"
 								  @bind-Value="@repair.CustomerPhoneNumber" />
 				</p>
 
@@ -83,15 +73,23 @@
 				</p>
 
 				<p>
-					<MatTextField Label="Select brand"
-								  Outlined="true"
-								  @bind-Value="@repair.ApplianceBrand"/>
+					<MatSelect Label="Select brand"
+							   @bind-Value="@repair.ApplianceBrand">
+
+						@foreach (string s in BrandsInfo.Brands) {
+							<MatOptionString Value="@s">@s</MatOptionString>
+						}
+					</MatSelect>
 				</p>
 
 				<p>
-					<MatTextField Label="Select Type" 
-								  Outlined="true"
-								  @bind-Value="@repair.ApplianceType"/>
+					<MatSelect Label="Select type"
+							   @bind-Value="@repair.ApplianceType">
+
+						@foreach (string s in BrandsInfo.Types) {
+							<MatOptionString Value="@s">@s</MatOptionString>
+						}
+					</MatSelect>
 				</p>
 
 				<p>
@@ -150,13 +148,19 @@
 </EditForm>
 
 @code {
-	int id = 0;
 	AddRepairBindingModel repair = new AddRepairBindingModel();
-	RepairService service = new RepairService();
 
-	void UploadRepair() {
-		client.PostJsonAsync
-			<AddRepairBindingModel>("https://localhost:44355/api/repairs/create-repair", repair);
+	protected override async Task OnInitializedAsync() {
+		repair.RepairId = await Task.Run(() => {
+			return service.GetLastId("Value").Result;
+		});
+
+		++repair.RepairId;
+	}
+
+	async void UploadRepair() {
+		await client.PostJsonAsync<AddRepairBindingModel>
+			("https://localhost:44355/api/repairs/create-repair", repair);
 
 		StateHasChanged();
 	}
