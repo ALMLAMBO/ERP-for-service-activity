@@ -48,7 +48,7 @@ namespace ERPForServiceActivity.API.Controllers {
                     ApplianceType = model.ApplianceType
                 };
 
-            return service.GetData(data);
+            return null;//service.GetData(data);
         }
     }
 }
