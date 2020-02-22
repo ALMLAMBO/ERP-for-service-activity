@@ -40,10 +40,11 @@ namespace ERPForServiceActivity.Services {
 
 			Repair repairModel = new Repair(repair);
 
-			await db.RunTransactionAsync(async transaction => {
-				UpdateRepairId(serviceName, repair.RepairId);
-				await repairsColRef.AddAsync(repairModel);
-			});
+			await repairsColRef.AddAsync(repairModel);
+			//await db.RunTransactionAsync(async transaction => {
+			//	UpdateRepairId(serviceName, repair.RepairId);
+			//	
+			//});
 		}
 
 		private async Task<string> GetDocumentId(string collectionName,

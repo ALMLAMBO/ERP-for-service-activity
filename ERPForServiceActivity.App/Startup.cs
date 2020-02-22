@@ -1,11 +1,10 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Blazor.Services;
@@ -35,6 +34,22 @@ namespace ERPForServiceActivity.App {
 					options.MaximumReceiveMessageSize =
 						10 * 1024 * 1024;
 				});
+
+			services.AddSignalR()
+				.AddJsonProtocol(options => {
+					options.PayloadSerializerOptions
+						.IgnoreNullValues = true;
+
+				});
+				//.AddNewtonsoftJsonProtocol(options => {
+				//	options.PayloadSerializerSettings
+				//		.NullValueHandling =
+				//			NullValueHandling.Ignore;
+				//
+				//	options.PayloadSerializerSettings
+				//		.ReferenceLoopHandling =
+				//			ReferenceLoopHandling.Ignore;
+				//});
 
 			services.AddSingleton<IUserService, UserService>();
 			services.AddSingleton<IRepairService, RepairService>();
