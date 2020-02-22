@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Cloud.Firestore" Version="1.1.0" />
+    <PackageReference Include="MatBlazor" Version="2.2.0" />
+  </ItemGroup>
+
 </Project>

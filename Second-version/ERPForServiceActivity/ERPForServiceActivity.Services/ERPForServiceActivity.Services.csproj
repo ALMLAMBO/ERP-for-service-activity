@@ -4,4 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Cloud.Firestore" Version="1.1.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="2.5.0" />
+    <PackageReference Include="Google.Cloud.Vision.V1" Version="1.7.0" />
+  </ItemGroup>
+
 </Project>
