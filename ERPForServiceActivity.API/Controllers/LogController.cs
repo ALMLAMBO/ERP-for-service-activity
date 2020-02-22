@@ -15,8 +15,7 @@ namespace ERPForServiceActivity.API.Controllers {
 
         [HttpGet("get-all-logs/{id}")]
         public async Task<List<RepairLog>> GetLogsForRepair(int id) {
-
-            return null;
+            return await service.GetLogsForRepair(id);
         }
 
         [HttpPost("add-log")]
