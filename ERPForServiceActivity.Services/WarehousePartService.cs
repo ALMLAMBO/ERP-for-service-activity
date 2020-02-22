@@ -38,7 +38,7 @@ namespace ERPForServiceActivity.Services {
 					.GetSnapshotAsync();
 
 				if(partsWithSameSPN.Count == 0) {
-					
+					await RunTransaction(newPart, colRef);	
 				}
 				else {
 					WarehousePart lastPartWithSameSPN =
