@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MatBlazor;
 using BlazorInputFile;
-using ERPForServiceActivity.CommonModels.Attributes;
 
 namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 	public class AddRepairBindingModel {
