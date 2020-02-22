@@ -2,7 +2,6 @@
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using Google.Cloud.Firestore;
-using ERPForServiceActivity.CommonModels.Attributes;
 using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
 
 namespace ERPForServiceActivity.Models.Repairs {
@@ -16,17 +15,25 @@ namespace ERPForServiceActivity.Models.Repairs {
 			RepairId = repair.RepairId;
 			RepairStatus = repair.Cancelled ? 
 				"Cancelled" : "Created repair";
+			
 			CreatedAt = DateTime.UtcNow;
-
-			repair.GetType()
-				.GetProperties()
-				.ToList()
-				.ForEach(property => {
-					GetType()
-						.GetProperty(property.Name)
-						.SetValue(this, 
-							property.GetValue(repair));
-				});
+			CustomerName = repair.CustomerName;
+			CustomerAddress = repair.CustomerAddress;
+			CustomerPhoneNumber = repair.CustomerPhoneNumber;
+			DefectByCustomer = repair.DefectByCustomer;
+			GoingToAddress = repair.GoingToAddress;
+			InWarranty = repair.InWarranty;
+			ApplianceBrand = repair.ApplianceBrand;
+			ApplianceType = repair.ApplianceType;
+			ApplianceModel = repair.ApplianceModel;
+			ApplianceSerialNumber = repair.ApplianceSerialNumber;
+			ApplianceProductCodeOrImei = repair.ApplianceProductCodeOrImei;
+			ApplianceEquipment = repair.ApplianceEquipment;
+			BoughtFrom = repair.BoughtFrom;
+			WarrantyCardNumber = repair.WarrantyCardNumber;
+			WarrantyPeriod = repair.WarrantyPeriod;
+			BoughtAt = repair.BoughtAt;
+			AdditionalInformation = repair.AdditionalInformation;
 		}
 
 		public string Id { get; set; }
