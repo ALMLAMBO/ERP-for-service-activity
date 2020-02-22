@@ -11,11 +11,11 @@ using Google.Cloud.Storage;
 using Google.Cloud.Vision.V1;
 using Google.Cloud.Firestore;
 using ERPForServiceActivity.Data;
+using ERPForServiceActivity.Security;
 using ERPForServiceActivity.Models.Repairs;
 using ERPForServiceActivity.Services.Interfaces;
-using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
 using ERPForServiceActivity.CommonModels.ViewModels.Repairs;
-using ERPForServiceActivity.Security;
+using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
 
 namespace ERPForServiceActivity.Services {
 	public class RepairService : IRepairService {
@@ -183,6 +183,11 @@ namespace ERPForServiceActivity.Services {
 			}
 
 			return result;
+		}
+
+		public async void UploadLog(RepairLog log) {
+			LogService service = new LogService();
+			await service.UploadLog(log);
 		}
 	}
 }
