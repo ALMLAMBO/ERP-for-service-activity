@@ -21,20 +21,24 @@ namespace ERPForServiceActivity.Services {
 	public class RepairService : IRepairService {
 		private ConnectionConfig connection = new ConnectionConfig();
 
-		public async void UploadRepair(string serviceName, AddRepairBindingModel repair) {
+		public async void UploadRepair(
+			string serviceName, 
+			AddRepairBindingModel repair) {
+			
 			FirestoreDb db = connection.GetFirestoreDb();
 
-			string docId =
-				GetDocumentId("service-repairs", serviceName)
-				.Result;
-
 			CollectionReference repairsColRef = db
-				.Collection("service-repairs")
-				.Document(docId)
-				.Collection("repairs");
+				.Collection("service-repairs");
+
+			DateTime endOfWarranty = new DateTime(
+				repair.BoughtAt.Year + repair.WarrantyPeriod / 12,
+				repair.BoughtAt.Month, repair.BoughtAt.Day);
+
+			repair.InWarranty = 
+				DateTime.UtcNow >= repair.BoughtAt &&
+				DateTime.UtcNow <= endOfWarranty ? true : false;
 
 			Repair repairModel = new Repair(repair);
-			repairModel.RepairId = repair.RepairId;
 
 			await db.RunTransactionAsync(async transaction => {
 				UpdateRepairId(serviceName, repair.RepairId);
