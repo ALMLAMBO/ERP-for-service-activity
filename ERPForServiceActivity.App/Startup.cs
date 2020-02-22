@@ -11,9 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Blazor.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Components.Authorization;
+using ERPForServiceActivity.Common;
 using ERPForServiceActivity.App.Data;
 using ERPForServiceActivity.Services;
-using ERPForServiceActivity.App.Areas.Identity;
 using ERPForServiceActivity.Services.Interfaces;
 
 namespace ERPForServiceActivity.App {
@@ -27,21 +27,23 @@ namespace ERPForServiceActivity.App {
 		// This method gets called by the runtime. Use this method to add services to the container.
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services) {
-			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(
-					Configuration.GetConnectionString("DefaultConnection")));
-			services.AddDefaultIdentity<IdentityUser>()
-				.AddEntityFrameworkStores<ApplicationDbContext>();
 			services.AddRazorPages();
-			services.AddServerSideBlazor();
-			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-			services.AddSingleton<WeatherForecastService>();
-			services.AddSingleton<IRepairService, RepairService>();
+			services.AddAuthorization();
+			services.AddAuthentication();
+			services.AddServerSideBlazor()
+				.AddHubOptions(options => {
+					options.MaximumReceiveMessageSize =
+						10 * 1024 * 1024;
+				});
+
 			services.AddSingleton<IUserService, UserService>();
-			services.AddSingleton<IWarehousePartService, WarehousePartService>();
+			services.AddSingleton<IRepairService, RepairService>();
+			services.AddSingleton<IWarehousePartService, 
+				WarehousePartService>();
+			
 			services.AddScoped<HttpClient>();
 
-			if(!services.Any(x => x.ServiceType == typeof(HttpClient))) {
+			if (!services.Any(x => x.ServiceType == typeof(HttpClient))) {
 				services.AddScoped<HttpClient>(s => {
 					var uriHelper = s.GetRequiredService<NavigationManager>();
 
@@ -72,7 +74,7 @@ namespace ERPForServiceActivity.App {
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints => {
-				endpoints.MapControllers();
+				//endpoints.MapControllers();
 				endpoints.MapBlazorHub();
 				endpoints.MapFallbackToPage("/_Host");
 			});
