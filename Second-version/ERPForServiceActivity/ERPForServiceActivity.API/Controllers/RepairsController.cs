@@ -18,12 +18,6 @@ namespace ERPForServiceActivity.API.Controllers {
         [HttpPost("create-repair")]
         public void AddRepair([FromBody] AddRepairBindingModel repair) {
             service.UploadRepair("Value", repair);
-
-            //service.MoveImageToOriginalDirectory(
-            //    service.ConvertToBitmap(repair.ModelSNImage));
-            //
-            //service.MoveMultipleImagesToOriginalDirectory(
-            //    service.ConvertMultipleToBitmap(repair.OtherImages));
         }
 
         [HttpGet("get-repairs/{serviceName}")]
