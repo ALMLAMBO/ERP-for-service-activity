@@ -1,4 +1,8 @@
 ﻿@page "/"
+@using GoogleMapsComponents
+@using GoogleMapsComponents.Maps
+@using ERPForServiceActivity.CommonModels.BindingModels.Maps
+@inject IMapsService service
 
 <MatButton @onclick=
 		   "@(() => { showCustomerLogin = true; })">
@@ -53,9 +57,33 @@
 	</MatDialogActions>
 </MatDialog>
 
+<GoogleMap @ref="map1" Id="map1" Options="mapOptions"></GoogleMap>
+
 @code {
+	GoogleMap map1;
+	MapOptions mapOptions;
+
 	bool showCustomerLogin = false;
 	bool showPersonalLogin = false;
-	AddRepairBindingModel repair = 
+	AddRepairBindingModel repair =
 		new AddRepairBindingModel();
+
+	protected override async Task OnInitializedAsync() {
+		MapsCoordinatesBindingModel mapsCoordinates =
+			await Task.Run(() => {
+				return service
+					.GetCoordinates("СПИДИ София - Младост 3 (жк), бл. 319, ж.к. Младост 3, София")
+					.Result;
+			});
+
+		mapOptions = new MapOptions() {
+			Zoom = 13,
+
+			Center = new LatLngLiteral() {
+				Lat = mapsCoordinates.Lat,
+				Lng = mapsCoordinates.Lng
+			},
+			MapTypeId = MapTypeId.Sattellite
+		};
+	}
 }
