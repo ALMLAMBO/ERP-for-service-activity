@@ -3,7 +3,6 @@ using System.Text;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MatBlazor;
-using BlazorInputFile;
 
 namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 	public class AddRepairBindingModel {
