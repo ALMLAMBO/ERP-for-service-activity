@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Google.Cloud.Firestore;
-using System.Threading.Tasks;
 using ERPForServiceActivity.Data;
 using ERPForServiceActivity.Models.Repairs;
 using ERPForServiceActivity.Services.Interfaces;
@@ -19,8 +20,22 @@ namespace ERPForServiceActivity.Services {
 			CollectionReference colRef = db
 				.Collection("activity-log");
 
+			DocumentReference docRef = null;
+
+			Dictionary<string, object> repairIdDoc =
+				new Dictionary<string, object>() {
+					{ "RepairId", log.RepairId }
+				};
+
 			await db.RunTransactionAsync(async t => {
-				await colRef.AddAsync(log);
+				docRef = await colRef.AddAsync(repairIdDoc);
+			});
+
+			CollectionReference subDocRef = 
+				docRef.Collection("logs");
+
+			await db.RunTransactionAsync(async t => {
+				await subDocRef.AddAsync(log);
 			});
 		}
 
@@ -44,6 +59,27 @@ namespace ERPForServiceActivity.Services {
 			});
 
 			return logs;
+		}
+
+		public async Task UploadLogToExistingRepair(int id, RepairLog log) {
+			FirestoreDb db = connection.GetFirestoreDb();
+			CollectionReference colRef = db
+				.Collection("activity-log");
+
+			QuerySnapshot snapshot = await colRef
+				.WhereEqualTo("RepairId", id)
+				.Limit(1)
+				.GetSnapshotAsync();
+
+			CollectionReference subColRef = snapshot
+				.Documents
+				.FirstOrDefault()
+				.Reference
+				.Collection("logs");
+
+			await db.RunTransactionAsync(async t => {
+				await subColRef.AddAsync(log);
+			});
 		}
 	}
 }
