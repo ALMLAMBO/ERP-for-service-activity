@@ -1,0 +1,110 @@
+﻿@page "/all-repairs"
+@inject IRepairService service
+
+<MatTable Items="@allRepairs" 
+		  TableItem="RepairViewModel">
+	
+	<MatTableHeader>
+		<th>Id</th>
+		<th>Status</th>
+		<th>Statuses</th>
+		<th>Warranty</th>
+		<th>Brand</th>
+		<th>Model</th>
+		<th>S/N</th>
+		<th nowrap>Product code/IMEI</th>
+		<th nowrap>Created at</th>
+		<th nowrap>Add part</th>
+		<th>Defect</th>
+		<th nowrap>Additional Information</th>
+		<th>Service</th>
+		<th>Techician</th>
+		<th nowrap>Warranty card number</th>
+		<th nowrap>Purchase date</th>
+		<th nowrap>Warranry period</th>
+		<th nowrap>Customer name</th>
+		<th nowrap>Customer address</th>
+		<th nowrap>Customer phone number</th>
+		<th>Accessories</th>
+		<th nowrap>Going to address</th>
+		<th>Seller</th>
+	</MatTableHeader>
+	<MatTableRow>
+		<td>@context.RepairId</td>
+		<td>@context.RepairStatus</td>
+		<td>
+			<MatSelect Label="Choose status" @bind-Value="@context.RepairStatus">
+				@foreach(string status in CommonConstants.Statuses) {
+					<MatOptionString Value="@status">@status</MatOptionString>
+				}
+			</MatSelect>
+		</td>
+		<td>@context.InWarranty</td>
+		<td>@context.ApplianceBrand</td>
+		<td>@context.ApplianceModel</td>
+		<td>@context.ApplianceSerialNumber</td>
+		<td>@context.ApplianceProductCodeOrImei</td>
+		<td>@context.CreatedAt</td>
+		<td><MatButton @onclick="@(() => { popupVisible = true; })">Add part</MatButton></td>
+		<td>@context.DefectByCustomer</td>
+		<td>@context.AdditionalInformation</td>
+		<td></td>
+		<td></td>
+		<td>@context.WarrantyCardNumber</td>
+		<td>@context.BoughtAt</td>
+		<td>@context.WarrantyPeriod</td>
+		<td>@context.CustomerName</td>
+		<td>@context.CustomerAddress</td>
+		<td>@context.CustomerPhoneNumber</td>
+		<td>@context.ApplianceEquipment</td>
+		<td>@context.GoingToAddress</td>
+		<td>@context.BoughtFrom</td>
+	</MatTableRow>
+</MatTable>
+
+<MatDialog @bind-IsOpen="@popupVisible">
+	<MatDialogTitle>
+
+	</MatDialogTitle>
+	
+	<MatDialogContent>
+		<MatTextField Label="Part number"
+					  @bind-Value ="@part.PartNumber" />
+
+		<MatTextField Label="Description"
+					  @bind-Value="@part.Description" />
+
+		<MatFileUpload OnChange="ShowPicture"></MatFileUpload>
+	</MatDialogContent>
+
+	<MatDialogActions>
+		<MatButton @onclick="(() => { popupVisible = false; })">Save</MatButton>
+		<MatButton @onclick="(() => { popupVisible = false; })">Cancel</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
+@code {
+	List<RepairViewModel> allRepairs;
+	AddPartToRepairBindingModel part = new AddPartToRepairBindingModel();
+	bool popupVisible = false;
+	bool repairCard = false;
+
+	protected override async Task OnInitializedAsync() {
+		allRepairs = await Task.Run(() => {
+			return service.GetAllRepairs("Value").Result;
+		});
+	}
+
+	public void ShowPicture(IMatFileUploadEntry[] files) {
+
+	}
+
+
+	public void AddToRepair() {
+
+	}
+
+	void OpenRepairCard() {
+		repairCard = true; 
+	}
+}
