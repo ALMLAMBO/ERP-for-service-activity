@@ -40,10 +40,13 @@ namespace ERPForServiceActivity.Services {
 
 			Repair repairModel = new Repair(repair);
 
-			await db.RunTransactionAsync(async transaction => {
-				UpdateRepairId(serviceName, repair.RepairId);
-				await repairsColRef.AddAsync(repairModel);
-			});
+			await db
+				.RunTransactionAsync(async transaction => {
+					UpdateRepairId(serviceName, 
+						repairModel.RepairId);
+					
+					await repairsColRef.AddAsync(repairModel);
+				});
 		}
 
 		private async Task<string> GetDocumentId(string collectionName,
@@ -102,18 +105,28 @@ namespace ERPForServiceActivity.Services {
 		}
 
 		private RepairViewModel NewModel(DocumentSnapshot ds) {
-			RepairViewModel result = new RepairViewModel();
-
-			ds.ToDictionary()
-				.ToList()
-				.ForEach(keyVal => {
-					result
-						.GetType()
-						.GetProperty(keyVal.Key)
-						.SetValue(result, keyVal.Value);
-				});
-
-			return result;
+			return new RepairViewModel() {
+				RepairId = ds.GetValue<int>("RepairId"),
+				RepairStatus = ds.GetValue<string>("RepairStatus"),
+				CreatedAt = ds.GetValue<DateTime>("CreatedAt"),
+				CustomerName = ds.GetValue<string>("CustomerName"),
+				CustomerAddress = ds.GetValue<string>("CustomerAddress"),
+				CustomerPhoneNumber = ds.GetValue<string>("CustomerPhoneNumber"),
+				DefectByCustomer = ds.GetValue<string>("DefectByCustomer"),
+				GoingToAddress = ds.GetValue<bool>("GoingToAddress"),
+				InWarranty = ds.GetValue<bool>("InWarranty"),
+				ApplianceBrand = ds.GetValue<string>("ApplianceBrand"),
+				ApplianceType = ds.GetValue<string>("ApplianceType"),
+				ApplianceModel = ds.GetValue<string>("ApplianceModel"),
+				ApplianceSerialNumber = ds.GetValue<string>("ApplianceSerialNumber"),
+				ApplianceProductCodeOrImei = ds.GetValue<string>("ApplianceProductCodeOrImei"),
+				ApplianceEquipment = ds.GetValue<string>("ApplianceEquipment"),
+				BoughtFrom = ds.GetValue<string>("BoughtFrom"),
+				WarrantyCardNumber = ds.GetValue<string>("WarrantyCardNumber"),
+				WarrantyPeriod = ds.GetValue<int>("WarrantyPeriod"),
+				BoughtAt = ds.GetValue<DateTime>("BoughtAt"),
+				AdditionalInformation = ds.GetValue<string>("AdditionalInformation")
+			};
 		}
 
 		public async Task<List<RepairViewModel>>
@@ -123,14 +136,9 @@ namespace ERPForServiceActivity.Services {
 			FirestoreDb db = config.GetFirestoreDb();
 			List<RepairViewModel> repairs = new List<RepairViewModel>();
 
-			string docId = GetDocumentId(
-				"service-repairs", serviceName).Result;
-
-			Query query = db.Collection("service-repairs")
-				.Document(docId)
-				.Collection("repairs");
-
-			QuerySnapshot snapshot = await query.GetSnapshotAsync();
+			QuerySnapshot snapshot = await db
+				.Collection("service-repairs")
+				.GetSnapshotAsync();
 
 			Parallel.ForEach(snapshot.Documents, ds => {
 				if (ds.Exists) {
@@ -163,8 +171,8 @@ namespace ERPForServiceActivity.Services {
 			MemoryStream stream = new MemoryStream();
 			file.WriteToStreamAsync(stream);
 
-			Google.Cloud.Vision.V1.Image image = 
-				Google.Cloud.Vision.V1.Image.FromStream(stream);
+			Image image = 
+				Image.FromStream(stream);
 
 			var annotations = client.DetectText(image);
 
