@@ -9,5 +9,7 @@ namespace ERPForServiceActivity.Services.Interfaces {
 		Task UploadLog(RepairLog log);
 
 		Task<List<RepairLog>> GetLogsForRepair(int id);
+
+		Task UploadLogToExistingRepair(int id, RepairLog log);
 	}
 }
