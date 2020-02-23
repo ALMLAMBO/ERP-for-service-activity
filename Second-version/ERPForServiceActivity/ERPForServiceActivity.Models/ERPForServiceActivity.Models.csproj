@@ -8,4 +8,10 @@
     <PackageReference Include="Google.Cloud.Firestore" Version="1.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.Security\ERPForServiceActivity.Security.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -6,6 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="MatBlazor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.Services\ERPForServiceActivity.Services.csproj" />
   </ItemGroup>
 
 </Project>
