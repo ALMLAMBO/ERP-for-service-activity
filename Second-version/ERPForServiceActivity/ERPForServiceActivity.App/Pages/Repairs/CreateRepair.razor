@@ -2,7 +2,7 @@
 @inject HttpClient client
 @inject IRepairService service
 
-<EditForm Model="@repair" >
+<EditForm Model="@repair" OnValidSubmit="UploadRepair">
 	<DataAnnotationsValidator />
 
 	<div class="mat-layout-grid">
@@ -137,8 +137,8 @@
 			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
 			</div>
 			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-				<MatButton Raised="true" OnClick="UploadRepair" Type="submit">Save</MatButton>
-				<MatButton Raised="true" OnClick="ResetForm">Cancel</MatButton>
+				<MatButton Raised="true" Type="submit">Save</MatButton>
+				<MatButton Raised="true">Cancel</MatButton>
 			</div>
 			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
 			</div>
@@ -158,8 +158,8 @@
 		++repair.RepairId;
 	}
 
-	async void UploadRepair() {
-		await client.PostJsonAsync<AddRepairBindingModel>
+	void UploadRepair() {
+		client.PostJsonAsync
 			("https://localhost:44313/api/repairs/create-repair", repair);
 
 		StateHasChanged();
