@@ -35,7 +35,9 @@ namespace ERPForServiceActivity.App {
 						10 * 1024 * 1024;
 				});
 
+			services.AddSingleton<ILogService, LogService>();
 			services.AddSingleton<IUserService, UserService>();
+			services.AddSingleton<IMapsService, MapsService>();
 			services.AddSingleton<IRepairService, RepairService>();
 			services.AddSingleton<IWarehousePartService, 
 				WarehousePartService>();
