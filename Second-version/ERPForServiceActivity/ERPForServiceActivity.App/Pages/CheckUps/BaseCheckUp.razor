@@ -1,0 +1,13 @@
+﻿@page "/all-checkups"
+
+<h1>Checkups</h1>
+
+<MatSelect Label="Select checkup" @bind-Value="@str">
+	@foreach (string s in CommonConstants.Checkups) {
+		<MatOptionString Value="@s">@s</MatOptionString>
+	}
+</MatSelect>
+
+@code {
+	string str = "";
+}
