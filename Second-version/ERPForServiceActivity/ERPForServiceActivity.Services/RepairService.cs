@@ -47,6 +47,16 @@ namespace ERPForServiceActivity.Services {
 					
 					await repairsColRef.AddAsync(repairModel);
 				});
+
+			RepairLog log = new RepairLog() {
+				TimeOfEvent = DateTime.UtcNow,
+				RepairId = repairModel.RepairId,
+				TypeOfEvent = "create",
+				Status = repairModel.RepairStatus,
+				Description = $"Add repair with id {repairModel.RepairId}"
+			};
+
+			UploadLog(log);
 		}
 
 		private async Task<string> GetDocumentId(string collectionName,
