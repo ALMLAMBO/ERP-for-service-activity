@@ -41,20 +41,23 @@ namespace ERPForServiceActivity.Services {
 
 		public async Task<List<RepairLog>> 
 			GetLogsForRepair(int id) {
-			
-			FirestoreDb db = connection
-				.GetFirestoreDb();
 
+			FirestoreDb db = connection.GetFirestoreDb();
 			List<RepairLog> logs = new List<RepairLog>();
 
-			CollectionReference colRef = db
-				.Collection("activity-log");
-
-			QuerySnapshot snapshot = await colRef
-				.WhereEqualTo("RepairId", id)
+			QuerySnapshot getIdDoc = await db
+				.Collection("activity-log")
 				.GetSnapshotAsync();
 
-			Parallel.ForEach(snapshot.Documents, ds => {
+			DocumentReference docRef = getIdDoc
+				.FirstOrDefault(x => x.GetValue<int>("RepairId") == id)
+				.Reference;
+
+			QuerySnapshot getLogs = await docRef
+				.Collection("logs")
+				.GetSnapshotAsync();
+
+			Parallel.ForEach(getLogs.Documents, ds => {
 				logs.Add(ds.ConvertTo<RepairLog>());
 			});
 
