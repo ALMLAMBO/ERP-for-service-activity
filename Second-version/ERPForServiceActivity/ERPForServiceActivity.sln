@@ -3,23 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{0027F20C-5C80-4E09-9492-53B5AC71F6DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{0027F20C-5C80-4E09-9492-53B5AC71F6DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.API", "ERPForServiceActivity.API\ERPForServiceActivity.API.csproj", "{5DC880B6-0B9D-4389-90F0-3AE71B86CB92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.API", "ERPForServiceActivity.API\ERPForServiceActivity.API.csproj", "{5DC880B6-0B9D-4389-90F0-3AE71B86CB92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Common", "ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj", "{F4DD5A0E-9266-436C-B0B3-0560A1EDE743}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.Common", "ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj", "{F4DD5A0E-9266-436C-B0B3-0560A1EDE743}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.CommonModels", "ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj", "{AE50A8ED-9D55-42A7-B317-2589C0305E04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.CommonModels", "ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj", "{AE50A8ED-9D55-42A7-B317-2589C0305E04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Data", "ERPForServiceActivity.Data\ERPForServiceActivity.Data.csproj", "{40942490-8773-4223-97AF-616CED30C60F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.Data", "ERPForServiceActivity.Data\ERPForServiceActivity.Data.csproj", "{40942490-8773-4223-97AF-616CED30C60F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Models", "ERPForServiceActivity.Models\ERPForServiceActivity.Models.csproj", "{C549C529-8D69-49E2-A81B-36E4531A4587}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.Models", "ERPForServiceActivity.Models\ERPForServiceActivity.Models.csproj", "{C549C529-8D69-49E2-A81B-36E4531A4587}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Security", "ERPForServiceActivity.Security\ERPForServiceActivity.Security.csproj", "{3904B135-EFA5-47EE-B6AB-E841AE80F550}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.Security", "ERPForServiceActivity.Security\ERPForServiceActivity.Security.csproj", "{3904B135-EFA5-47EE-B6AB-E841AE80F550}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Services", "ERPForServiceActivity.Services\ERPForServiceActivity.Services.csproj", "{B647B608-78BE-46FF-80D8-0B5C7F256D5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.Services", "ERPForServiceActivity.Services\ERPForServiceActivity.Services.csproj", "{B647B608-78BE-46FF-80D8-0B5C7F256D5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Tests", "ERPForServiceActivity.Tests\ERPForServiceActivity.Tests.csproj", "{A3F1B4FC-E1B6-453E-8B68-9923587B5BBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.Tests", "ERPForServiceActivity.Tests\ERPForServiceActivity.Tests.csproj", "{A3F1B4FC-E1B6-453E-8B68-9923587B5BBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
