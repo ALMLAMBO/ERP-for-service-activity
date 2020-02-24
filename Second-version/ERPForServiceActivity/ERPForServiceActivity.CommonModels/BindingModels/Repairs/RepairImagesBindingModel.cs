@@ -8,11 +8,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Repairs {
 	public class RepairImagesBindingModel {
 		public MatFileUploadEntry SNImage { get; set; }
 
-		public MatFileUploadEntry OtherImages { get; set; }
-
-		public RepairImagesBindingModel() {
-
-		}
+		public MatFileUploadEntry[] OtherImages { get; set; }
 
 		public MatFileUploadEntry ConvertInterfaceToClass(
 			IMatFileUploadEntry file) {
