@@ -22,5 +22,10 @@ namespace ERPForServiceActivity.API.Controllers {
         public async void AddLog([FromBody] RepairLog log) {
             await service.UploadLog(log);
         }
+
+        [HttpPost("add-log-to-ex-repair")]
+        public async void AddLogToExistingRepair([FromBody] RepairLog log) {
+            await service.UploadLogToExistingRepair(log.RepairId, log);
+        }
     }
 }
