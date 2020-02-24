@@ -34,15 +34,10 @@ namespace ERPForServiceActivity.API.Controllers {
 
         [HttpPost("get-data")]
         public ResultFromOCRBindingModel GetData(
-            [FromBody] AddRepairBindingModel model) {
+            [FromBody] ResultFromOCRBindingModel model) {
 
-            ResultFromOCRBindingModel data =
-                new ResultFromOCRBindingModel() {
-                    ApplianceBrand = model.ApplianceBrand,
-                    ApplianceType = model.ApplianceType
-                };
-
-            return null;//service.GetData(data);
+            return service.GetData(model, model.Images
+                    .ConvertInterfaceToClass(model.Images.SNImage));
         }
     }
 }
