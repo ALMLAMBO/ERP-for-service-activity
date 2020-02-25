@@ -26,6 +26,7 @@ namespace ERPForServiceActivity.Common {
 			"Repair completed",
 			"Customer informed",
 			"Awaiting payment",
+			"Repair paid",
 			"Returned by courier",
 			"Repair completed / Awaiting customer",
 			"Transported to customer"
