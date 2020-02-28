@@ -36,8 +36,8 @@ namespace ERPForServiceActivity.API.Controllers {
         public ResultFromOCRBindingModel GetData(
             [FromBody] ResultFromOCRBindingModel model) {
 
-            return service.GetData(model, model.Images
-                    .ConvertInterfaceToClass(model.Images.SNImage));
+            return service.GetData(/*model, model.Images
+                    .ConvertInterfaceToClass(model.Images.SNImage)*/).Result;
         }
     }
 }
