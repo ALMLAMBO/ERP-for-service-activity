@@ -17,7 +17,7 @@ namespace ERPForServiceActivity.Services.Interfaces {
 
 		public Task<int> GetLastId(string serviceName);
 	
-		public ResultFromOCRBindingModel GetData(
-			ResultFromOCRBindingModel model, IMatFileUploadEntry file);
+		public Task<ResultFromOCRBindingModel> GetData(
+			/*ResultFromOCRBindingModel model, MatFileUploadEntry file*/);
 	}
 }
