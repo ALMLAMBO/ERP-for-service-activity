@@ -63,6 +63,11 @@
 						@bind-Value="@repair.AdditionalInformation" />
 				</p>
 
+				<p>
+					<MatFileUpload Label="Other Images"
+								   OnChange="AddImage"/>
+				</p>
+
 				<ValidationSummary />
 			</div>
 
@@ -132,6 +137,11 @@
 								  Outlined="true"
 								  @bind-Value="@repair.BoughtFrom" />
 				</p>
+
+				<p>
+					<MatFileUpload OnChange="GetData"
+								   Label="S/N Image" />
+				</p>
 			</div>
 
 			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
@@ -144,16 +154,40 @@
 			</div>
 		</div>
 	</div>
-
 </EditForm>
+
+<MatDialog @bind-IsOpen="@popupVisible">
+	<MatDialogTitle>
+		Result from getting data from image
+	</MatDialogTitle>
+
+	<MatDialogContent>
+		<MatTextField Label="Model"
+					  @bind-Value="@result.ApplianceModel"/>
+
+		<MatTextField Label="S/N"
+					  @bind-Value="@result.ApplianceSerialNumber"/>
+	</MatDialogContent>
+
+	<MatDialogActions>
+		<MatButton @onclick="@(() => popupVisible = false)">Save</MatButton>
+		<MatButton @onclick="@(() => popupVisible = false)">False</MatButton>
+	</MatDialogActions>
+</MatDialog>
 
 @code {
 	AddRepairBindingModel repair = new AddRepairBindingModel();
+	private ResultFromOCRBindingModel result =
+		new ResultFromOCRBindingModel();
+
+	private bool popupVisible = false;
 
 	protected override async Task OnInitializedAsync() {
 		repair.RepairId = await Task.Run(() => {
 			return service.GetLastId("Value").Result;
 		});
+
+		//result = service.GetData().Result;
 
 		++repair.RepairId;
 	}
@@ -163,6 +197,28 @@
 			("https://localhost:44313/api/repairs/create-repair", repair);
 
 		StateHasChanged();
+	}
+
+	async void GetData(IMatFileUploadEntry[] files) {
+		result.Images.SNImage = result.Images
+			.ConvertInterfaceToClass(
+				files.FirstOrDefault());
+
+		result = await Task.Run(() => {
+			return client
+				.PostJsonAsync<ResultFromOCRBindingModel>
+					("https://localhost:44313/api/repairs/get-data",
+					result)
+				.Result;
+		});
+	}
+
+	void AddImage(IMatFileUploadEntry[] files) {
+		result.Images.OtherImages
+			.ToList()
+			.Add(result.Images
+				.ConvertInterfaceToClass(
+					files.FirstOrDefault()));
 	}
 
 	void ResetForm() {
