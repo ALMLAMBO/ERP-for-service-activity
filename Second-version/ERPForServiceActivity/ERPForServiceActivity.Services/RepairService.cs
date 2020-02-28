@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -163,30 +161,38 @@ namespace ERPForServiceActivity.Services {
 				.ToList();
 		}
 
-		public ResultFromOCRBindingModel GetData(
-			ResultFromOCRBindingModel model, IMatFileUploadEntry file) {
-			
+		public async Task<ResultFromOCRBindingModel> GetData() {
+			string filepath = @"E:\Diploma-project\ERP-for-service-activity\ERPForServiceActivity.Services\erp-for-service-activity-b1a1fc83881a.json";
+
+			Environment.SetEnvironmentVariable(
+				"GOOGLE_APPLICATION_CREDENTIALS", filepath);
+
 			ResultFromOCRBindingModel result = 
 				new ResultFromOCRBindingModel();
 
 			Regex snRegex = SerialNumberRegexes
-				.GetSNRegex(model.ApplianceBrand);
+				.GetSNRegex("LG");
 
-			Regex modelRegex = LGModels
-				.GetModelRegex(model.ApplianceType);
+			Regex modelRegex = UnitModels
+				.GetModelRegex(
+					"LG", 
+					"TV");
 			
 			ImageAnnotatorClient client = 
 				ImageAnnotatorClient.Create();
 
 			MemoryStream stream = new MemoryStream();
-			file.WriteToStreamAsync(stream);
+			//file.WriteToStreamAsync(stream);
 
-			Image image = 
-				Image.FromStream(stream);
+			Image image = Image
+				.FromFileAsync(
+					@"E:\ALEKS\Images\pictures-diploma-project\1.jpg")
+				.Result;
 
-			var annotations = client.DetectText(image);
+			IReadOnlyList<EntityAnnotation> annotations =
+				 client.DetectTextAsync(image).Result;
 
-			foreach (var annotation in annotations) {
+			foreach (EntityAnnotation annotation in annotations) {
 				if(snRegex.Match(annotation.Description)
 					.Success) {
 
