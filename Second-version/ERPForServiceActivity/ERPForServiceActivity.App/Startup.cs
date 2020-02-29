@@ -1,18 +1,22 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Blazor.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using ERPForServiceActivity.Common;
 using ERPForServiceActivity.App.Data;
 using ERPForServiceActivity.Services;
+using ERPForServiceActivity.Security;
 using ERPForServiceActivity.Services.Interfaces;
 
 namespace ERPForServiceActivity.App {
@@ -28,7 +32,40 @@ namespace ERPForServiceActivity.App {
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddRazorPages();
 			services.AddAuthorization();
-			services.AddAuthentication();
+			services.AddAuthentication(options => {
+				options.DefaultAuthenticateScheme =
+					CookieAuthenticationDefaults.AuthenticationScheme;
+
+				options.DefaultSignInScheme =
+					CookieAuthenticationDefaults.AuthenticationScheme;
+
+				options.DefaultSignOutScheme =
+					CookieAuthenticationDefaults.AuthenticationScheme;
+
+				options.DefaultChallengeScheme =
+					OpenIdConnectDefaults.AuthenticationScheme;
+			})
+			.AddOpenIdConnect(options => {
+				options.ClientId = OktaContants.OktaClientId;
+				options.ClientSecret = OktaContants.OktaClientSecret;
+				options.CallbackPath = "/authorization-code/callback";
+				options.Authority = OktaContants.OktaIssuer;
+				options.ResponseType = "code";
+				options.SaveTokens = true;
+				options.Scope.Add("openid");
+				options.Scope.Add("profile");
+				options.TokenValidationParameters.ValidateIssuer = false;
+				options.TokenValidationParameters.NameClaimType = "name";
+			})
+			.AddCookie(options => {
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+			});
+
+			services.Configure<CookiePolicyOptions>(options => {
+				options.CheckConsentNeeded = context => true;
+				options.MinimumSameSitePolicy = SameSiteMode.None;
+			});
+
 			services.AddServerSideBlazor()
 				.AddHubOptions(options => {
 					options.MaximumReceiveMessageSize =
@@ -43,6 +80,8 @@ namespace ERPForServiceActivity.App {
 				WarehousePartService>();
 			
 			services.AddScoped<HttpClient>();
+			services.AddScoped<IHttpContextAccessor, 
+				HttpContextAccessor>();
 
 			if (!services.Any(x => x.ServiceType == typeof(HttpClient))) {
 				services.AddScoped<HttpClient>(s => {
@@ -74,7 +113,7 @@ namespace ERPForServiceActivity.App {
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints => {
-				//endpoints.MapControllers();
+				endpoints.MapControllers();
 				endpoints.MapBlazorHub();
 				endpoints.MapFallbackToPage("/_Host");
 			});
