@@ -80,8 +80,6 @@ namespace ERPForServiceActivity.App {
 				WarehousePartService>();
 			
 			services.AddScoped<HttpClient>();
-			services.AddScoped<IHttpContextAccessor, 
-				HttpContextAccessor>();
 
 			if (!services.Any(x => x.ServiceType == typeof(HttpClient))) {
 				services.AddScoped<HttpClient>(s => {
