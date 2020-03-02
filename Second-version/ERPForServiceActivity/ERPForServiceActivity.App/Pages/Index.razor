@@ -3,13 +3,12 @@
 @using GoogleMapsComponents.Maps
 @using ERPForServiceActivity.CommonModels.BindingModels.Maps
 @inject IMapsService service
+@inject IRepairService repairService
 
-<MatButton @onclick=
-		   "@(() => { showCustomerLogin = true; })">
+<MatButton @onclick="@(() => { showCustomerLogin = true; })">
 	Customer login
 </MatButton>
-<MatButton @onclick=
-		   "@(() => { showPersonalLogin = true; })">
+<MatButton @onclick="@(() => { showPersonalLogin = true; })">
 	Services login
 </MatButton>
 
@@ -19,21 +18,27 @@
 	</MatDialogTitle>
 	<MatDialogContent>
 		<MatTextField Label="Customer name"
-					  @bind-Value="@repair.ApplianceBrand"/>
+					  @bind-Value="@name" />
 
 		<MatTextField Label="Reclaim number"
-					  @bind-Value="@repair.ApplianceEquipment"/>
+					  @bind-Value="@reclaim" />
+
+		@if(!string.IsNullOrEmpty(result.Status)) {
+			<div>
+				<h3>Status -> @result.Status</h3>
+				<h3>Time -> @result.Time.ToString("dd.MM.yyyy HH:mm:ss")</h3>
+			</div>
+		}
 	</MatDialogContent>
 	<MatDialogActions>
-		<MatButton @onclick=
-				   "@(() => { showCustomerLogin = false; })">Check</MatButton>
-		
-		<MatButton @onclick=
-				   "@(() => { showCustomerLogin = false; })">Cancel</MatButton>
+		<MatButton @onclick="@(() => {
+								   Check(name, reclaim);})">Check</MatButton>
+
+		<MatButton @onclick="@(() => { showCustomerLogin = false; })">Close</MatButton>
 	</MatDialogActions>
 </MatDialog>
 
-<MatDialog @bind-IsOpen="@showPersonalLogin">
+<!--MatDialog @bind-IsOpen="@showPersonalLogin">
 	<MatDialogTitle>
 		Services login
 	</MatDialogTitle>
@@ -55,35 +60,17 @@
 		<MatButton @onclick=
 				   "@(() => { showPersonalLogin = false; })">Cancel</MatButton>
 	</MatDialogActions>
-</MatDialog>
-
-<GoogleMap @ref="map1" Id="map1" Options="mapOptions"></GoogleMap>
+</MatDialog-->
 
 @code {
-	GoogleMap map1;
-	MapOptions mapOptions;
-
 	bool showCustomerLogin = false;
 	bool showPersonalLogin = false;
-	AddRepairBindingModel repair =
-		new AddRepairBindingModel();
 
-	protected override async Task OnInitializedAsync() {
-		MapsCoordinatesBindingModel mapsCoordinates =
-			await Task.Run(() => {
-				return service
-					.GetCoordinates("СПИДИ София - Младост 3 (жк), бл. 319, ж.к. Младост 3, София")
-					.Result;
-			});
+	private string name = string.Empty;
+	private string reclaim = string.Empty;
+	private StatusResult result = new StatusResult();
 
-		mapOptions = new MapOptions() {
-			Zoom = 13,
-
-			Center = new LatLngLiteral() {
-				Lat = mapsCoordinates.Lat,
-				Lng = mapsCoordinates.Lng
-			},
-			MapTypeId = MapTypeId.Sattellite
-		};
+	void Check(string name, string reclaim) {
+		result = repairService.GetRepairStatus(name, reclaim).Result;
 	}
 }
