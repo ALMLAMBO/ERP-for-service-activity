@@ -8,7 +8,7 @@ namespace ERPForServiceActivity.Services.Interfaces {
 	public interface ILogService {
 		Task UploadLog(RepairLog log);
 
-		Task<List<RepairLog>> GetLogsForRepair(int id);
+		List<RepairLog> GetLogsForRepair(int id);
 
 		Task UploadLogToExistingRepair(int id, RepairLog log);
 	}
