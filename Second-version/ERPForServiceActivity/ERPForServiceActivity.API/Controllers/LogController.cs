@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using ERPForServiceActivity.Services;
 using ERPForServiceActivity.Models.Repairs;
+using ERPForServiceActivity.CommonModels.ViewModels.Repairs;
 
 namespace ERPForServiceActivity.API.Controllers {
     [ApiController]
@@ -14,8 +15,8 @@ namespace ERPForServiceActivity.API.Controllers {
         private LogService service = new LogService();
 
         [HttpGet("get-all-logs/{id}")]
-        public async Task<List<RepairLog>> GetLogsForRepair(int id) {
-            return await service.GetLogsForRepair(id);
+        public List<RepairLog> GetLogsForRepair(int id) {
+            return service.GetLogsForRepair(id);
         }
 
         [HttpPost("add-log")]
@@ -26,6 +27,12 @@ namespace ERPForServiceActivity.API.Controllers {
         [HttpPost("add-log-to-ex-repair")]
         public async void AddLogToExistingRepair([FromBody] RepairLog log) {
             await service.UploadLogToExistingRepair(log.RepairId, log);
+        }
+
+        [HttpPut("update-repair")]
+        public void UpdateRepair([FromBody] RepairViewModel model) {
+            RepairService repairService = new RepairService();
+            repairService.UpdateRepair(model);
         }
     }
 }
