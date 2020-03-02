@@ -1,24 +1,30 @@
 ﻿@page "/all-repairs"
+@inject HttpClient client
 @inject IRepairService service
+@inject ILogService logService
 
-<MatTable Items="@allRepairs" 
+<MatTable
+		  Items="@allRepairs" 
 		  TableItem="RepairViewModel">
 	
 	<MatTableHeader>
 		<th>Id</th>
 		<th>Status</th>
 		<th>Statuses</th>
+		<th>Update status</th>
+		<th>Show repair card</th>
+		<th>Show history</th>
 		<th>Warranty</th>
 		<th>Brand</th>
 		<th>Model</th>
 		<th>S/N</th>
-		<th nowrap>Product code/IMEI</th>
-		<th nowrap>Created at</th>
+		<th width="200">Product code/IMEI</th>
+		<th width="200">Created at</th>
 		<th nowrap>Add part</th>
+		<th>Add part to repair</th>
+		<th>Show parts for repair</th>
 		<th>Defect</th>
 		<th nowrap>Additional Information</th>
-		<th>Service</th>
-		<th>Techician</th>
 		<th nowrap>Warranty card number</th>
 		<th nowrap>Purchase date</th>
 		<th nowrap>Warranry period</th>
@@ -33,23 +39,44 @@
 		<td>@context.RepairId</td>
 		<td>@context.RepairStatus</td>
 		<td>
-			<MatSelect Label="Choose status" @bind-Value="@context.RepairStatus">
+			<MatSelect Label="Choose status" 
+					   @bind-Value="@context.RepairStatus">
 				@foreach(string status in CommonConstants.Statuses) {
 					<MatOptionString Value="@status">@status</MatOptionString>
 				}
 			</MatSelect>
 		</td>
+		<td><MatButton @onclick="@(() => UploadLog(context.RepairId
+									, context.RepairStatus))">Save</MatButton>
+		</td>
+		<td><MatButton @onclick="@(() => { OpenRepairCard(context.RepairId); } )">Edit</MatButton></td>
+		<td><MatButton @onclick="@(() => { ShowHistory(context.RepairId); } )">History</MatButton></td>
 		<td>@context.InWarranty</td>
 		<td>@context.ApplianceBrand</td>
 		<td>@context.ApplianceModel</td>
 		<td>@context.ApplianceSerialNumber</td>
 		<td>@context.ApplianceProductCodeOrImei</td>
 		<td>@context.CreatedAt</td>
-		<td><MatButton @onclick="@(() => { popupVisible = true; })">Add part</MatButton></td>
+		<td>
+			<MatButton @onclick="@(() => { log.RepairId = context.RepairId;
+									   repairId = context.RepairId;
+									   popupVisible = true; })">
+				Add part
+			</MatButton>
+		</td>
+		<td>
+			<MatButton @onclick="@(() => { repairId = context.RepairId;
+									   showSendPartToRepair = true;
+								   })">Add part to repair</MatButton>
+		</td>
+		<td>
+			<MatButton @onclick="@(() => {
+									   ShowParts(context.RepairId);
+									   showParts = true; 
+								   })">Show parts</MatButton>
+		</td>
 		<td>@context.DefectByCustomer</td>
 		<td>@context.AdditionalInformation</td>
-		<td></td>
-		<td></td>
 		<td>@context.WarrantyCardNumber</td>
 		<td>@context.BoughtAt</td>
 		<td>@context.WarrantyPeriod</td>
@@ -62,9 +89,42 @@
 	</MatTableRow>
 </MatTable>
 
+<MatDialog @bind-IsOpen="@repairCard">
+	<MatDialogTitle>
+		Repair @model.RepairId
+	</MatDialogTitle>
+	<MatDialogContent>
+		<EditRepair repair="@model" />
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick="@(() => { repairCard = false; })">Close</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@showHistory">
+	<MatDialogTitle>
+		Repair history
+	</MatDialogTitle>
+	<MatDialogContent>
+		<ul>
+			@foreach(RepairLog rl in logs) {
+				<li>
+					<p>
+						@rl.TimeOfEvent
+						@rl.Description
+					</p>
+				</li>
+			}
+		</ul>
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick="@(() => showHistory = false)">Close</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
 <MatDialog @bind-IsOpen="@popupVisible">
 	<MatDialogTitle>
-
+		Add part to repair
 	</MatDialogTitle>
 	
 	<MatDialogContent>
@@ -74,20 +134,69 @@
 		<MatTextField Label="Description"
 					  @bind-Value="@part.Description" />
 
-		<MatFileUpload OnChange="ShowPicture"></MatFileUpload>
+		<MatFileUpload Label="Upload part image"
+					   OnChange="ShowPicture" />
 	</MatDialogContent>
 
 	<MatDialogActions>
-		<MatButton @onclick="(() => { popupVisible = false; })">Save</MatButton>
+		<MatButton @onclick="@(() => {
+								   RequestPart(repairId, part.PartNumber);
+								   popupVisible = false; 
+							   })">Save</MatButton>
+		
 		<MatButton @onclick="(() => { popupVisible = false; })">Cancel</MatButton>
 	</MatDialogActions>
 </MatDialog>
 
+<MatDialog @bind-IsOpen="@showParts">
+	<MatDialogTitle>
+		Needed parts for the repair
+	</MatDialogTitle>
+	<MatDialogContent>
+		@foreach (KeyValuePair<string, int> part in parts) {
+			<p>
+				@part.Key -> @part.Value
+			</p>
+		}
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick="@(() => showParts = false)">Close</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@showSendPartToRepair">
+	<MatDialogTitle>
+		Send part to repair
+	</MatDialogTitle>
+	<MatDialogContent>
+		<MatTextField Label="Part number"
+					  @bind-Value="@part.PartNumber" />
+
+		<MatTextField Label="Needed quantity"
+					  @bind-Value="@quantity" />
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick="@(() => SendPartToRepair(repairId, 
+							   part.PartNumber, quantity))">Save</MatButton>
+
+		<MatButton @onclick="@(() => showSendPartToRepair = false)">Cancel</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
 @code {
+	RepairLog log = new RepairLog();
 	List<RepairViewModel> allRepairs;
+	List<RepairLog> logs = new List<RepairLog>();
+	RepairViewModel model = new RepairViewModel();
+	Dictionary<string, int> parts = new Dictionary<string, int>();
 	AddPartToRepairBindingModel part = new AddPartToRepairBindingModel();
 	bool popupVisible = false;
+	bool showHistory = false;
+	bool showParts = false;
+	bool showSendPartToRepair = false;
 	bool repairCard = false;
+	private int repairId = 0;
+	private int quantity = 0;
 
 	protected override async Task OnInitializedAsync() {
 		allRepairs = await Task.Run(() => {
@@ -99,12 +208,44 @@
 
 	}
 
+	void OpenRepairCard(int id) {
+		model = allRepairs
+			.Where(x => x.RepairId == id)
+			.FirstOrDefault();
 
-	public void AddToRepair() {
-
+		repairCard = true;
 	}
 
-	void OpenRepairCard() {
-		repairCard = true; 
+	void UploadLog(int id, string status) {
+		log.RepairId = id;
+		log.TimeOfEvent = DateTime.UtcNow;
+		log.TypeOfEvent = "update";
+		log.Description = $"Change status to {status}";
+
+		client.PostJsonAsync(
+			"https://localhost:44313/api/log/add-log-to-ex-repair",
+			log);
+
+		service.UpdateStatus(status, id);
+
+		log = new RepairLog();
+		StateHasChanged();
+	}
+
+	void ShowHistory(int id) {
+		logs = logService.GetLogsForRepair(id);
+		showHistory = true;
+	}
+
+	void RequestPart(int id, string partNumber) {
+		service.AddRequestedPartToRepair(partNumber, id);
+	}
+
+	void SendPartToRepair(int id, string partNumber, int quantity) {
+		service.SendPartToRepair(id, partNumber, quantity);
+	}
+
+	void ShowParts(int id) {
+		parts = service.GetPartsForRepair(id);
 	}
 }
