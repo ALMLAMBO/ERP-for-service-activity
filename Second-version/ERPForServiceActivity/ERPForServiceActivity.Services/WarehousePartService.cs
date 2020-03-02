@@ -108,6 +108,8 @@ namespace ERPForServiceActivity.Services {
 								.UpdateAsync(partAsDictionary);
 						});
 					});
+
+				await RunTransaction(newPart, colRef);
 			}
 		}
 
