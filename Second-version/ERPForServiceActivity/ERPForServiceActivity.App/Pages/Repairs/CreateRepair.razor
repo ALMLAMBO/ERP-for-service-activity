@@ -189,6 +189,8 @@
 
 		//result = service.GetData().Result;
 
+		//popupVisible = true;
+
 		++repair.RepairId;
 	}
 
@@ -199,26 +201,26 @@
 		StateHasChanged();
 	}
 
-	async void GetData(IMatFileUploadEntry[] files) {
-		result.Images.SNImage = result.Images
-			.ConvertInterfaceToClass(
-				files.FirstOrDefault());
-
-		result = await Task.Run(() => {
-			return client
-				.PostJsonAsync<ResultFromOCRBindingModel>
-					("https://localhost:44313/api/repairs/get-data",
-					result)
-				.Result;
-		});
+	void GetData(IMatFileUploadEntry[] files) {
+		//result.Images.SNImage = result.Images
+		//	.ConvertInterfaceToClass(
+		//		files.FirstOrDefault());
+		//
+		//result = await Task.Run(() => {
+		//	return client
+		//		.PostJsonAsync<ResultFromOCRBindingModel>
+		//			("https://localhost:44313/api/repairs/get-data",
+		//			result)
+		//		.Result;
+		//});
 	}
 
 	void AddImage(IMatFileUploadEntry[] files) {
-		result.Images.OtherImages
-			.ToList()
-			.Add(result.Images
-				.ConvertInterfaceToClass(
-					files.FirstOrDefault()));
+		//result.Images.OtherImages
+		//	.ToList()
+		//	.Add(result.Images
+		//		.ConvertInterfaceToClass(
+		//			files.FirstOrDefault()));
 	}
 
 	void ResetForm() {
