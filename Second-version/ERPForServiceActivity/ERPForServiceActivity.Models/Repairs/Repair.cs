@@ -74,6 +74,12 @@ namespace ERPForServiceActivity.Models.Repairs {
 		[FirestoreProperty]
 		public bool InWarranty { get; set; }
 
+		[FirestoreProperty]
+		public double TechnicianLabor { get; set; }
+
+		[FirestoreProperty]
+		public double PartsPrice { get; set; }
+
 		[Required]
 		[FirestoreProperty]
 		public string ApplianceBrand { get; set; }
