@@ -39,29 +39,38 @@ namespace ERPForServiceActivity.Services {
 			});
 		}
 
-		public async Task<List<RepairLog>> 
+		public List<RepairLog> 
 			GetLogsForRepair(int id) {
 
 			FirestoreDb db = connection.GetFirestoreDb();
 			List<RepairLog> logs = new List<RepairLog>();
 
-			QuerySnapshot getIdDoc = await db
+			QuerySnapshot qs = db
 				.Collection("activity-log")
-				.GetSnapshotAsync();
+				.WhereEqualTo("RepairId", id)
+				.GetSnapshotAsync()
+				.Result;
 
-			DocumentReference docRef = getIdDoc
-				.FirstOrDefault(x => x.GetValue<int>("RepairId") == id)
-				.Reference;
+			string docId = qs
+				.FirstOrDefault()
+				.Reference
+				.Id;
 
-			QuerySnapshot getLogs = await docRef
-				.Collection("logs")
-				.GetSnapshotAsync();
+			Query getLogsQuery = db
+				.Collection("activity-log")
+				.Document(docId)
+				.Collection("logs");
+
+			QuerySnapshot getLogs = getLogsQuery
+				.GetSnapshotAsync().Result;
 
 			Parallel.ForEach(getLogs.Documents, ds => {
 				logs.Add(ds.ConvertTo<RepairLog>());
 			});
 
-			return logs;
+			return logs
+				.OrderByDescending(x => x.TimeOfEvent)
+				.ToList();
 		}
 
 		public async Task UploadLogToExistingRepair(int id, RepairLog log) {
@@ -69,10 +78,11 @@ namespace ERPForServiceActivity.Services {
 			CollectionReference colRef = db
 				.Collection("activity-log");
 
-			QuerySnapshot snapshot = await colRef
+			QuerySnapshot snapshot = colRef
 				.WhereEqualTo("RepairId", id)
 				.Limit(1)
-				.GetSnapshotAsync();
+				.GetSnapshotAsync()
+				.Result;
 
 			CollectionReference subColRef = snapshot
 				.Documents
