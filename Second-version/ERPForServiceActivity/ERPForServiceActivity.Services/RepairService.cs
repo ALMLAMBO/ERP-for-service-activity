@@ -11,9 +11,11 @@ using Google.Cloud.Firestore;
 using ERPForServiceActivity.Data;
 using ERPForServiceActivity.Security;
 using ERPForServiceActivity.Models.Repairs;
+using ERPForServiceActivity.Models.Warehouse;
 using ERPForServiceActivity.Services.Interfaces;
 using ERPForServiceActivity.CommonModels.ViewModels.Repairs;
 using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
+using ERPForServiceActivity.CommonModels.BindingModels.WarehouseParts;
 
 namespace ERPForServiceActivity.Services {
 	public class RepairService : IRepairService {
@@ -161,11 +163,10 @@ namespace ERPForServiceActivity.Services {
 				.ToList();
 		}
 
-		public async Task<ResultFromOCRBindingModel> GetData() {
-			string filepath = @"E:\Diploma-project\ERP-for-service-activity\ERPForServiceActivity.Services\erp-for-service-activity-b1a1fc83881a.json";
-
+		public Task<ResultFromOCRBindingModel> GetData() {
 			Environment.SetEnvironmentVariable(
-				"GOOGLE_APPLICATION_CREDENTIALS", filepath);
+				"GOOGLE_APPLICATION_CREDENTIALS", 
+				CommonSecurityConstants.PathToGoogleCloudJson);
 
 			ResultFromOCRBindingModel result = 
 				new ResultFromOCRBindingModel();
@@ -181,18 +182,14 @@ namespace ERPForServiceActivity.Services {
 			ImageAnnotatorClient client = 
 				ImageAnnotatorClient.Create();
 
-			MemoryStream stream = new MemoryStream();
-			//file.WriteToStreamAsync(stream);
-
 			Image image = Image
-				.FromFileAsync(
-					@"E:\ALEKS\Images\pictures-diploma-project\1.jpg")
-				.Result;
+				.FromFile(
+					@"E:\ALEKS\Images\pictures-diploma-project\1.jpg");
 
 			IReadOnlyList<EntityAnnotation> annotations =
-				 client.DetectTextAsync(image).Result;
+				client.DetectText(image);
 
-			foreach (EntityAnnotation annotation in annotations) {
+			foreach(EntityAnnotation annotation in annotations) {
 				if(snRegex.Match(annotation.Description)
 					.Success) {
 
@@ -206,12 +203,292 @@ namespace ERPForServiceActivity.Services {
 				}
 			}
 
-			return result;
+			return Task.FromResult(result);
 		}
 
 		public async void UploadLog(RepairLog log) {
 			LogService service = new LogService();
 			await service.UploadLog(log);
+		}
+
+		public void UpdateStatus(string status, int id) {
+			FirestoreDb db = connection.GetFirestoreDb();
+			QuerySnapshot snapshot = db
+				.Collection("service-repairs")
+				.WhereEqualTo("RepairId", id)
+				.Limit(1)
+				.GetSnapshotAsync()
+				.Result;
+
+			snapshot.Documents
+				.FirstOrDefault()
+				.Reference.UpdateAsync("RepairStatus", status);
+		}
+
+		public async void UpdateRepair(RepairViewModel model) {
+			FirestoreDb db = connection.GetFirestoreDb();
+
+			QuerySnapshot snapshot = db
+				.Collection("service-repairs")
+				.WhereEqualTo("RepairId", model.RepairId)
+				.Limit(1)
+				.GetSnapshotAsync()
+				.Result;
+
+			Repair repair = snapshot
+				.FirstOrDefault()
+				.ConvertTo<Repair>();
+
+			repair = NewRepair(model);
+
+			Dictionary<string, object> d = repair
+				.GetType()
+				.GetProperties()
+				.ToDictionary(x => x.Name, x => x.GetValue(repair, null));
+
+			string logDesc = "Update repair card";
+
+			await snapshot.Documents
+				.FirstOrDefault()
+				.Reference
+				.UpdateAsync(d);
+
+			//modelAsDict
+			//	.ToList()
+			//	.ForEach(x => {
+			//		if(repairAsDict.ContainsKey(x.Key)) {
+			//			if(repairAsDict[x.Key] != x.Value) {
+			//				logDesc += $"\\n{x.Key} from {repairAsDict[x.Key]} to {x.Value}";
+			//			}
+			//		}
+			//	});
+
+			RepairLog log = new RepairLog() {
+				TimeOfEvent = DateTime.UtcNow,
+				Description = logDesc,
+				TypeOfEvent = "update"
+			};
+
+			await new LogService()
+				.UploadLogToExistingRepair(model.RepairId, log);
+		}
+
+		private Repair NewRepair(RepairViewModel model) {
+			return new Repair() {
+				RepairId = model.RepairId,
+				RepairStatus = model.RepairStatus,
+				CreatedAt = model.CreatedAt,
+				CustomerName = model.CustomerName,
+				CustomerAddress = model.CustomerAddress,
+				CustomerPhoneNumber = model.CustomerPhoneNumber,
+				DefectByCustomer = model.DefectByCustomer,
+				GoingToAddress = model.GoingToAddress,
+				InWarranty = model.InWarranty,
+				ApplianceBrand = model.ApplianceBrand,
+				ApplianceType = model.ApplianceType,
+				ApplianceModel = model.ApplianceModel,
+				ApplianceSerialNumber = model.ApplianceSerialNumber,
+				ApplianceProductCodeOrImei = model.ApplianceProductCodeOrImei,
+				ApplianceEquipment = model.ApplianceEquipment,
+				BoughtFrom = model.BoughtFrom,
+				WarrantyCardNumber = model.WarrantyCardNumber,
+				WarrantyPeriod = model.WarrantyPeriod,
+				BoughtAt = model.BoughtAt,
+				AdditionalInformation = model.AdditionalInformation
+			};
+		}
+
+		public void AddPartToRepair(string partNumber, int id) {
+			throw new NotImplementedException();
+		}
+
+		public async void AddRequestedPartToRepair(string partNumber, int id) {
+			FirestoreDb db = connection.GetFirestoreDb();
+			QuerySnapshot snapshot = db
+				.Collection("repair-parts")
+				.WhereEqualTo("RepairId", id)
+				.GetSnapshotAsync()
+				.Result;
+
+			if(snapshot.Count == 0) {
+				RequestPartBindingModel requestPart = new RequestPartBindingModel() {
+					RepairId = id,
+					PartsForRepair = new Dictionary<string, int>() {
+						{ partNumber, 1 }
+					}
+				};
+
+				CollectionReference colRef = db
+					.Collection("repair-parts");
+
+				await db.RunTransactionAsync(async t => {
+					await colRef.AddAsync(requestPart);
+				});
+
+				RepairLog log = new RepairLog() {
+					TimeOfEvent = DateTime.UtcNow,
+					TypeOfEvent = "request part",
+					Description = $"Request part with part number {partNumber}"
+				};
+
+				await new LogService()
+					.UploadLogToExistingRepair(id, log);
+			}
+			else {
+				RequestPartBindingModel model = snapshot
+					.FirstOrDefault()
+					.ConvertTo<RequestPartBindingModel>();
+
+				if(model.PartsForRepair.ContainsKey(partNumber)) {
+					++model.PartsForRepair[partNumber];
+				}
+				else {
+					model.PartsForRepair.Add(partNumber, 1);
+				}
+
+				await snapshot
+					.FirstOrDefault()
+					.Reference
+					.UpdateAsync("PartsForRepair", model.PartsForRepair);
+
+				RepairLog log = new RepairLog() {
+					TimeOfEvent = DateTime.UtcNow,
+					TypeOfEvent = "update part qnt",
+					Description = $"Update part qnt for {partNumber}"
+				};
+
+				await new LogService()
+					.UploadLogToExistingRepair(id, log);
+			}
+		}
+
+		public async void SendPartToRepair(int id, string partNumber, int qnt) {
+			FirestoreDb db = connection.GetFirestoreDb();
+
+			CollectionReference colRef = db
+				.Collection("warehouse-parts")
+				.Document("bcyvKBFBWE6DxnvIQ1Kn")
+				.Collection("parts");
+
+			QuerySnapshot snapshot = colRef
+				.WhereEqualTo("PartNumber", partNumber)
+				.GetSnapshotAsync()
+				.Result;
+
+			if(snapshot.Count == 0) {
+				return;
+			}
+			else {
+				WarehousePart part = new List<DocumentSnapshot>
+					(snapshot.Documents)
+					.OrderByDescending(x => x.CreateTime)
+					.FirstOrDefault()
+					.ConvertTo<WarehousePart>();
+
+				if(part.Availability < qnt) {
+					return;
+				}
+				else {
+					snapshot.Documents
+						.ToList()
+						.ForEach(async x => {
+							WarehousePart p = x.ConvertTo<WarehousePart>();
+							p.Availability -= qnt;
+
+							await x
+								.Reference
+								.UpdateAsync("Availability", p.Availability);
+						});
+
+					QuerySnapshot qs = db
+						.Collection("repair-parts")
+						.WhereEqualTo("RepairId", id)
+						.Limit(1)
+						.GetSnapshotAsync()
+						.Result;
+
+					RequestPartBindingModel parts = qs
+						.Documents
+						.FirstOrDefault()
+						.ConvertTo<RequestPartBindingModel>();
+
+					parts.PartsForRepair[partNumber] = qnt;
+
+					await qs.Documents
+						.FirstOrDefault()
+						.Reference
+						.UpdateAsync("PartsForRepair", parts.PartsForRepair);
+
+					RepairLog log = new RepairLog() {
+						TimeOfEvent = DateTime.UtcNow,
+						TypeOfEvent = "update part qnt",
+						Description = "Update part qnt"
+					};
+
+					await new LogService()
+						.UploadLogToExistingRepair(id, log);
+				}
+			}
+		}
+
+		public Dictionary<string, int> GetPartsForRepair(int id) {
+			FirestoreDb db = connection.GetFirestoreDb();
+
+			QuerySnapshot snapshot = db
+				.Collection("repair-parts")
+				.WhereEqualTo("RepairId", id)
+				.Limit(1)
+				.GetSnapshotAsync()
+				.Result;
+
+			return snapshot
+				.Documents
+				.FirstOrDefault()
+				.ConvertTo<RequestPartBindingModel>()
+				.PartsForRepair;
+		}
+
+		public Task<StatusResult> GetRepairStatus(string name, string reclaim) {
+			FirestoreDb db = connection.GetFirestoreDb();
+			StatusResult result = new StatusResult();
+
+			string repairNum = reclaim
+				.Substring(reclaim.LastIndexOf("0") + 1);
+
+			int id = int.Parse(repairNum);
+
+			QuerySnapshot snapshot = db
+				.Collection("service-repairs")
+				.WhereEqualTo("CustomerName", name)
+				.GetSnapshotAsync()
+				.Result;
+
+			result.Status = snapshot.FirstOrDefault()
+				.ConvertTo<Repair>()
+				.RepairStatus;
+
+			QuerySnapshot qs = db.Collection("activity-log")
+				.WhereEqualTo("RepairId", id)
+				.GetSnapshotAsync()
+				.Result;
+
+			string docId = qs.FirstOrDefault().Id;
+			QuerySnapshot getLog = db
+				.Collection("activity-log")
+				.Document(docId)
+				.Collection("logs")
+				.GetSnapshotAsync()
+				.Result;
+
+			result.Time = getLog
+				.Where(x => x.ConvertTo<RepairLog>()
+					.Description.Contains(result.Status))
+				.OrderByDescending(x => x.CreateTime)
+				.FirstOrDefault()
+				.ConvertTo<RepairLog>()
+				.TimeOfEvent;
+
+			return Task.FromResult(result);
 		}
 	}
 }
