@@ -5,6 +5,6 @@ using ERPForServiceActivity.Models.Repairs;
 
 namespace ERPForServiceActivity.Services.Interfaces {
 	public interface IPdfService {
-		public void CreatePdf(Repair reapir);
+		public void CreatePdf(int id, string type, string notes);
 	}
 }
