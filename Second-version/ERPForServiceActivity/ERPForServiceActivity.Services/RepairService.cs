@@ -240,6 +240,7 @@ namespace ERPForServiceActivity.Services {
 				.ConvertTo<Repair>();
 
 			repair = NewRepair(model);
+			repair.Notes = model.Notes;
 
 			Dictionary<string, object> d = repair
 				.GetType()
