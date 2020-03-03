@@ -73,6 +73,7 @@ namespace ERPForServiceActivity.App {
 				});
 
 			services.AddSingleton<ILogService, LogService>();
+			services.AddSingleton<IPdfService, PdfService>();
 			services.AddSingleton<IUserService, UserService>();
 			services.AddSingleton<IMapsService, MapsService>();
 			services.AddSingleton<IRepairService, RepairService>();
