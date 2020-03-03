@@ -49,5 +49,7 @@ namespace ERPForServiceActivity.CommonModels.ViewModels.Repairs {
 		public DateTime BoughtAt { get; set; }
 
 		public string AdditionalInformation { get; set; }
+
+		public string Notes { get; set; }
 	}
 }
