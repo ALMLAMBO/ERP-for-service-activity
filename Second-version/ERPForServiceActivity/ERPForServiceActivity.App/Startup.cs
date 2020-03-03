@@ -58,7 +58,7 @@ namespace ERPForServiceActivity.App {
 				options.TokenValidationParameters.NameClaimType = "name";
 			})
 			.AddCookie(options => {
-				options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
 			});
 
 			services.Configure<CookiePolicyOptions>(options => {
