@@ -27,6 +27,8 @@ namespace ERPForServiceActivity.CommonModels.ViewModels.Repairs {
 		public bool GoingToAddress { get; set; }
 		
 		public bool InWarranty { get; set; }
+
+		public string TechnicianName { get; set; }
 		
 		public string ApplianceBrand { get; set; }
 		
