@@ -11,5 +11,8 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.WarehouseParts {
 
 		[FirestoreProperty]
 		public Dictionary<string, int> PartsForRepair { get; set; }
+
+		[FirestoreProperty]
+		public double Total { get; set; }
 	}
 }
