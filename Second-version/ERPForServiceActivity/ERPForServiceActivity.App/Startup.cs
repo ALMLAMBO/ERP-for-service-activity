@@ -77,6 +77,7 @@ namespace ERPForServiceActivity.App {
 			services.AddSingleton<IUserService, UserService>();
 			services.AddSingleton<IMapsService, MapsService>();
 			services.AddSingleton<IRepairService, RepairService>();
+			services.AddSingleton<ICheckupService, CheckupService>();
 			services.AddSingleton<IWarehousePartService, 
 				WarehousePartService>();
 			
