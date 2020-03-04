@@ -75,6 +75,9 @@ namespace ERPForServiceActivity.Models.Repairs {
 		public bool InWarranty { get; set; }
 
 		[FirestoreProperty]
+		public string TechnicianName { get; set; } = string.Empty;
+
+		[FirestoreProperty]
 		public double TechnicianLabor { get; set; }
 
 		[FirestoreProperty]
