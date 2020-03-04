@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetCore.NPOI" Version="1.2.2" />
     <PackageReference Include="FirebaseAdmin" Version="1.9.2" />
     <PackageReference Include="gmaps-api-net" Version="0.32.0" />
     <PackageReference Include="Google.Cloud.Firestore" Version="2.0.0-beta01" />
