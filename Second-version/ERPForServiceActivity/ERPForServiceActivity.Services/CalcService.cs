@@ -59,6 +59,11 @@ namespace ERPForServiceActivity.Services {
 
 						total += part.Price * x.Value;
 					});
+
+				await qs
+					.FirstOrDefault()
+					.Reference
+					.UpdateAsync("Total", total);
 			}
 			else {
 				total = 0;
