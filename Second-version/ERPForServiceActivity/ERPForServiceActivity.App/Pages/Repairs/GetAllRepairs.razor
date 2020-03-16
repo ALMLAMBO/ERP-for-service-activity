@@ -2,6 +2,11 @@
 @inject HttpClient client
 @inject IRepairService service
 @inject ILogService logService
+@inject IPdfService  pdfService
+@using GoogleMapsComponents
+@using GoogleMapsComponents.Maps
+@using GoogleMapsComponents.Maps.Places
+@using ERPForServiceActivity.CommonModels.BindingModels.Maps
 
 <MatTable
 		  Items="@allRepairs" 
@@ -28,6 +33,7 @@
 		<th nowrap>Warranty card number</th>
 		<th nowrap>Purchase date</th>
 		<th nowrap>Warranry period</th>
+		<th>Show in maps</th>
 		<th nowrap>Customer name</th>
 		<th nowrap>Customer address</th>
 		<th nowrap>Customer phone number</th>
@@ -49,7 +55,8 @@
 		<td><MatButton @onclick="@(() => UploadLog(context.RepairId
 									, context.RepairStatus))">Save</MatButton>
 		</td>
-		<td><MatButton @onclick="@(() => { OpenRepairCard(context.RepairId); } )">Edit</MatButton></td>
+		<td><MatButton @onclick="@(() => { OpenRepairCard(context.RepairId);
+									   repairId = context.RepairId; } )">Edit</MatButton></td>
 		<td><MatButton @onclick="@(() => { ShowHistory(context.RepairId); } )">History</MatButton></td>
 		<td>@context.InWarranty</td>
 		<td>@context.ApplianceBrand</td>
@@ -80,6 +87,8 @@
 		<td>@context.WarrantyCardNumber</td>
 		<td>@context.BoughtAt</td>
 		<td>@context.WarrantyPeriod</td>
+		<td><MatButton @onclick="@(() => ShowInMaps(context.CustomerAddress))">
+			Show in maps</MatButton></td>
 		<td>@context.CustomerName</td>
 		<td>@context.CustomerAddress</td>
 		<td>@context.CustomerPhoneNumber</td>
@@ -97,7 +106,27 @@
 		<EditRepair repair="@model" />
 	</MatDialogContent>
 	<MatDialogActions>
+		<MatButton @onclick="@(() => { showPrint = true; })">Generate pdf</MatButton>
 		<MatButton @onclick="@(() => { repairCard = false; })">Close</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@showPrint">
+	<MatDialogTitle>
+		Print
+	</MatDialogTitle>
+	<MatDialogContent>
+		<MatSelect Label="Select print form"
+				   @bind-Value="@option">
+			<MatOptionString Value="Received">Received</MatOptionString>
+			<MatOptionString Value="Repaired">Repaired</MatOptionString>
+		</MatSelect>
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick="@(() => pdfService
+							   .CreatePdf(repairId, option, notes))">Generate pdf</MatButton>
+
+		<MatButton @onclick="@(() => showPrint = false)">Close</MatButton>
 	</MatDialogActions>
 </MatDialog>
 
@@ -183,6 +212,18 @@
 	</MatDialogActions>
 </MatDialog>
 
+<MatDialog @bind-IsOpen="@showMaps">
+	<MatDialogTitle>
+		Customer address visualisation
+	</MatDialogTitle>
+	<MatDialogContent>
+		<GoogleMap @ref="@map1" Id="map1" Options="@mapOptions" Height="500"></GoogleMap>
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick="@(() => showMaps = false)">Close</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
 @code {
 	RepairLog log = new RepairLog();
 	List<RepairViewModel> allRepairs;
@@ -195,8 +236,20 @@
 	bool showParts = false;
 	bool showSendPartToRepair = false;
 	bool repairCard = false;
-	private int repairId = 0;
-	private int quantity = 0;
+	bool showPrint = false;
+	bool showMaps = false;
+	int repairId = 0;
+	int quantity = 0;
+	string option = string.Empty;
+	string notes = string.Empty;
+	GoogleMap map1;
+	MapOptions mapOptions = new MapOptions() {
+		Zoom = 13,
+		MapTypeId = MapTypeId.Roadmap
+	};
+
+	private ElementReference searchBox;
+	private Autocomplete autocomplete;
 
 	protected override async Task OnInitializedAsync() {
 		allRepairs = await Task.Run(() => {
@@ -247,5 +300,35 @@
 
 	void ShowParts(int id) {
 		parts = service.GetPartsForRepair(id);
+	}
+
+	void ShowInMaps(string address) {
+		MapsCoordinatesBindingModel model =
+			new MapsService()
+			.GetCoordinates(address)
+			.Result;
+
+		mapOptions.Center = new LatLngLiteral() {
+			Lat = model.Lat,
+			Lng = model.Lng
+		};
+
+		showMaps = true;
+	}
+
+	private async Task OnAfterMapInitAsync() {
+		this.autocomplete = await Autocomplete.CreateAsync(this.map1.JsRuntime, this.searchBox, new AutocompleteOptions {
+			StrictBounds = false
+		});
+
+		await this.autocomplete.AddListener("place_changed", async () => await this.MapSearchPlaceChanged());
+	}
+
+	private async Task MapSearchPlaceChanged() {
+		var place = await this.autocomplete.GetPlace();
+
+		if (place?.Geometry?.Location != null) {
+			// do something with the place.Geometry.Location
+		}
 	}
 }
