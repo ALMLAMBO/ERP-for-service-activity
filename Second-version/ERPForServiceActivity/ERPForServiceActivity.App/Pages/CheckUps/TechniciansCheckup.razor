@@ -1,0 +1,47 @@
+﻿@page "/all-checkups/technicians-checkup"
+@inject ICheckupService service
+
+<div>
+	<MatDatePicker Label="Begin date"
+				   @bind-Value="begin" />
+
+	<MatDatePicker Label="End date"
+				   @bind-Value="end" />
+</div>
+
+<MatButton @onclick="GetData"></MatButton>
+
+<div>
+
+	<MatButton>Export to Excel</MatButton>
+</div>
+
+<div>
+	<MatTable Items="result">
+		<MatTableHeader>
+			<th>Technician name</th>
+			<th>Labor</th>
+		</MatTableHeader>
+		<MatTableRow>
+			<td>@context.Name</td>
+			<td>@context.Labor</td>
+		</MatTableRow>
+	</MatTable>
+</div>
+
+@code {
+	List<TechniciаnCheckupViewModel> result =
+		new List<TechniciаnCheckupViewModel>();
+
+	DateTime begin = DateTime.UtcNow;
+	DateTime end = DateTime.UtcNow;
+
+	async void GetData() {
+		result = await Task.Run(() => {
+			return service.TechnicianCheckup(
+				"Value", begin, end);
+		});
+
+		StateHasChanged();
+	}
+}

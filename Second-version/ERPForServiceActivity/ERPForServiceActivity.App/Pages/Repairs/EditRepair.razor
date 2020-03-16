@@ -1,0 +1,163 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject HttpClient client
+@inject IRepairService service
+
+<EditForm Model="@repair" OnValidSubmit="UpdateRepair">
+	<DataAnnotationsValidator />
+
+	<div class="mat-layout-grid">
+		<div class="mat-layout-grid-inner">
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+				<h1>Edit Repair</h1>
+			</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			</div>
+
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+				<p>
+					<h3>Customer data</h3>
+					<MatDivider />
+				</p>
+
+				<p>
+					<MatTextField Label="Name"
+								  Outlined="true"
+								  @bind-Value="@repair.CustomerName" />
+				</p>
+
+				<p>
+					<MatTextField Label="Address"
+								  Outlined="true"
+								  @bind-Value="@repair.CustomerAddress" />
+				</p>
+
+				<p>
+					<MatTextField Label="Phone Number"
+								  Outlined="true"
+								  @bind-Value="@repair.CustomerPhoneNumber" />
+				</p>
+
+				<p>
+					<MatCheckbox Label="Going to address"
+								 @bind-Value="@repair.GoingToAddress" />
+				</p>
+
+				<p>
+					<MatTextField Label="Defect by customer"
+								  Outlined="true"
+								  @bind-Value="@repair.DefectByCustomer" />
+				</p>
+
+				<p>
+					<MatTextField Label="Add equipment"
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceEquipment" />
+				</p>
+
+				<p>
+					<MatTextField Label="Other information"
+								  Outlined="true"
+								  @bind-Value="@repair.AdditionalInformation" />
+				</p>
+				<p>
+					<MatTextField Label="Notes"
+								  Outlined="true"
+								  @bind-Value="@repair.Notes" />
+				</p>
+
+				<ValidationSummary />
+			</div>
+
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+				<p>
+					<h3>Unit data</h3>
+					<MatDivider />
+				</p>
+
+				<p>
+					<MatSelect Label="Select brand"
+							   @bind-Value="@repair.ApplianceBrand">
+
+						@foreach (string s in BrandsInfo.Brands) {
+							<MatOptionString Value="@s">@s</MatOptionString>
+						}
+					</MatSelect>
+				</p>
+
+				<p>
+					<MatSelect Label="Select type"
+							   @bind-Value="@repair.ApplianceType">
+
+						@foreach (string s in BrandsInfo.Types) {
+							<MatOptionString Value="@s">@s</MatOptionString>
+						}
+					</MatSelect>
+				</p>
+
+				<p>
+					<MatTextField Label="Model"
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceModel" />
+				</p>
+
+				<p>
+					<MatTextField Label="S/N"
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceSerialNumber" />
+
+					<MatTextField Label="Product code/IMEI"
+								  Outlined="true"
+								  @bind-Value="@repair.ApplianceProductCodeOrImei" />
+				</p>
+
+				<p>
+					<MatDatePicker Label="Bought at"
+								   Outlined="true"
+								   @bind-Value="@repair.BoughtAt" />
+
+					<MatTextField Label="WC number"
+								  Outlined="true"
+								  @bind-Value="@repair.WarrantyCardNumber" />
+				</p>
+
+				<p>
+					<MatNumericUpDownField Label="Warranty period"
+										   Step="12"
+										   Type="number"
+										   Minimum="0"
+										   DecimalPlaces="0"
+										   @bind-Value="@repair.WarrantyPeriod" />
+				</p>
+
+				<p>
+					<MatTextField Label="Dealer/Shop"
+								  Outlined="true"
+								  @bind-Value="@repair.BoughtFrom" />
+				</p>
+			</div>
+
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+				<MatButton Raised="true" Type="submit">Save</MatButton>
+				<MatButton Raised="true">Cancel</MatButton>
+			</div>
+			<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			</div>
+		</div>
+	</div>
+
+</EditForm>
+
+@code {
+	[Required]
+	[Parameter]
+	public RepairViewModel repair { get; set; }
+
+	void UpdateRepair() {
+		service.UpdateRepair(repair);
+	}
+}
