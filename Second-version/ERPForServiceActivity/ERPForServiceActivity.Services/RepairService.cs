@@ -163,7 +163,7 @@ namespace ERPForServiceActivity.Services {
 				.ToList();
 		}
 
-		public Task<ResultFromOCRBindingModel> GetData() {
+		public async Task<ResultFromOCRBindingModel> GetData() {
 			Environment.SetEnvironmentVariable(
 				"GOOGLE_APPLICATION_CREDENTIALS", 
 				CommonSecurityConstants.PathToGoogleCloudJson);
@@ -180,14 +180,14 @@ namespace ERPForServiceActivity.Services {
 					"TV");
 			
 			ImageAnnotatorClient client = 
-				ImageAnnotatorClient.Create();
+				await ImageAnnotatorClient.CreateAsync();
 
-			Image image = Image
-				.FromFile(
+			Image image = await Image
+				.FromFileAsync(
 					@"E:\ALEKS\Images\pictures-diploma-project\1.jpg");
 
 			IReadOnlyList<EntityAnnotation> annotations =
-				client.DetectText(image);
+				await client.DetectTextAsync(image);
 
 			foreach(EntityAnnotation annotation in annotations) {
 				if(snRegex.Match(annotation.Description)
@@ -203,7 +203,7 @@ namespace ERPForServiceActivity.Services {
 				}
 			}
 
-			return Task.FromResult(result);
+			return result;
 		}
 
 		public async void UploadLog(RepairLog log) {
