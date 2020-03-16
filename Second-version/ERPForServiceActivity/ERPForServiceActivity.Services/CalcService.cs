@@ -15,52 +15,54 @@ namespace ERPForServiceActivity.Services {
 		private ConnectionConfig connection = 
 			new ConnectionConfig();
 		
-		public async Task<double> CalcRepairPrice(int id) {
+		public Task<double> CalcRepairPrice(int id) {
 			double total = 0;
 			FirestoreDb db = connection.GetFirestoreDb();
 
-			QuerySnapshot snapshot = await db
+			QuerySnapshot snapshot = db
 				.Collection("service-repairs")
 				.WhereEqualTo("RepairId", id)
 				.Limit(1)
-				.GetSnapshotAsync();
+				.GetSnapshotAsync()
+				.Result;
 
 			Repair repair = snapshot
 				.FirstOrDefault()
 				.ConvertTo<Repair>();
 
-			if(repair.RepairStatus.Contains("OOW")) {
+			if(repair.RepairStatus.Contains("OOW") || 
+				repair.RepairStatus.Equals("Awaiting payment")) {
 				total += repair.TechnicianLabor;
 
-				QuerySnapshot qs = await db
+				QuerySnapshot qs = db
 					.Collection("repair-parts")
 					.WhereEqualTo("RepairId", id)
 					.Limit(1)
-					.GetSnapshotAsync();
+					.GetSnapshotAsync()
+					.Result;
 
 				RequestPartBindingModel model = qs
 					.FirstOrDefault()
 					.ConvertTo<RequestPartBindingModel>();
 
-				model.PartsForRepair
-					.ToList()
-					.ForEach(async x => {
-						QuerySnapshot qst = await db
+				foreach (KeyValuePair<string, int> x in model.PartsForRepair) {
+					QuerySnapshot qst = db
 							.Collection("warehouse-parts")
 							.Document("bcyvKBFBWE6DxnvIQ1Kn")
 							.Collection("parts")
 							.WhereEqualTo("PartNumber", x.Key)
 							.Limit(1)
-							.GetSnapshotAsync();
+							.GetSnapshotAsync()
+							.Result;
 
-						WarehousePart part = qst
-							.FirstOrDefault()
-							.ConvertTo<WarehousePart>();
+					WarehousePart part = qst
+						.FirstOrDefault()
+						.ConvertTo<WarehousePart>();
 
-						total += part.Price * x.Value;
-					});
+					total += part.Price * x.Value;
+				}
 
-				await qs
+				qs
 					.FirstOrDefault()
 					.Reference
 					.UpdateAsync("Total", total);
@@ -69,7 +71,7 @@ namespace ERPForServiceActivity.Services {
 				total = 0;
 			}
 
-			return total;
+			return Task.FromResult(total);
 		}
 	}
 }
