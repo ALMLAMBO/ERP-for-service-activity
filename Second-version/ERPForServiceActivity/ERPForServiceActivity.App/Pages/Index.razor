@@ -1,7 +1,10 @@
 ﻿@page "/"
+@using PayPalHttp
+@using PayPalCheckoutSdk.Orders
 @using GoogleMapsComponents
 @using GoogleMapsComponents.Maps
 @using ERPForServiceActivity.CommonModels.BindingModels.Maps
+@inject NavigationManager navMan
 @inject IMapsService service
 @inject IRepairService repairService
 
@@ -23,14 +26,27 @@
 		<MatTextField Label="Reclaim number"
 					  @bind-Value="@reclaim" />
 
-		@if(!string.IsNullOrEmpty(result.Status)) {
+		@if (!string.IsNullOrEmpty(result.Status)) {
 			<div>
 				<h3>Status -> @result.Status</h3>
 				<h3>Time -> @result.Time.ToString("dd.MM.yyyy HH:mm:ss")</h3>
 			</div>
 		}
+
+		@if (result != null) {
+			@if (result.Status.Equals("Awaiting payment")) {
+				<MatDivider /> 
+				<h4><strong>Total:</strong> @price</h4>
+			}
+		}
 	</MatDialogContent>
 	<MatDialogActions>
+		@if (result != null) {
+			@if (result.Status.Equals("Awaiting payment")) {
+				<MatButton @onclick="Pay">Pay</MatButton>
+			}
+		}
+
 		<MatButton @onclick="@(() => {
 								   Check(name, reclaim);})">Check</MatButton>
 
@@ -65,12 +81,37 @@
 @code {
 	bool showCustomerLogin = false;
 	bool showPersonalLogin = false;
+	double price = 0;
 
 	private string name = string.Empty;
 	private string reclaim = string.Empty;
-	private StatusResult result = new StatusResult();
+	private StatusResult result = new StatusResult() {
+		Status = ""
+	};
 
 	void Check(string name, string reclaim) {
 		result = repairService.GetRepairStatus(name, reclaim).Result;
+
+		if(result.Status.Equals("Awaiting payment")) {
+			string str = reclaim.Substring(
+				reclaim.LastIndexOf("0") + 1);
+
+			int id = int.Parse(str);
+
+			price = new CalcService()
+				.CalcRepairPrice(id).Result;
+		}
+	}
+
+	async void Pay() {
+		HttpResponse response = await Task.Run(async () => {
+			return await new PaypalService()
+				.GetResponse(price);
+		});
+
+		navMan.NavigateTo(response.Result<Order>().Links[1].Href);
+
+		await new PaypalService()
+			.CompletePayment(response);
 	}
 }
