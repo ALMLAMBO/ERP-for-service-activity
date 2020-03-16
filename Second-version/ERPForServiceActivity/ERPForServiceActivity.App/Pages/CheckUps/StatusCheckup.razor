@@ -1,0 +1,69 @@
+﻿@page "/all-checkups/status-checkup"
+@inject ICheckupService service
+
+<div>
+	<MatDatePicker Label="Begin date"
+				   @bind-Value="begin" />
+
+	<MatDatePicker Label="End date"
+				   @bind-Value="end" />
+</div>
+
+<div>
+	<MatSelect Label="Select status"
+			   @bind-Value="status">
+		@foreach (string s in CommonConstants.Statuses) {
+			<MatOptionString Value="@s">@s</MatOptionString>
+		}
+	</MatSelect>
+	<MatButton @onclick="@(() => GetData(status))">Get data</MatButton>
+</div>
+
+<div>
+	<MatButton @onclick="ExportToExcel">Export to Excel</MatButton>
+</div>
+
+<div>
+	@if (result.Count != 0) {
+		<MatTable Items="result">
+			<MatTableHeader>
+				<th>Repair id</th>
+				<th>Status</th>
+				<th>Unit model</th>
+				<th>Going to addresss</th>
+				<th>Address</th>
+				<th>Phone number</th>
+			</MatTableHeader>
+			<MatTableRow>
+				<td>@context.RepairId</td>
+				<td>@context.Status</td>
+				<td>@context.UnitModel.</td>
+				<td>@context.GoingToAddress</td>
+				<td>@context.CustomerAddress</td>
+				<td>@context.CustomerPhoneNumber</td>
+			</MatTableRow>
+		</MatTable>
+	}
+</div>
+
+@code {
+	string status = string.Empty;
+	DateTime begin = DateTime.UtcNow;
+	DateTime end = DateTime.UtcNow;
+
+	List<RepairStatusCheckupViewModel> result =
+		new List<RepairStatusCheckupViewModel>();
+
+	async void GetData (string status) {
+		result = await Task.Run(() => {
+			return service.StatusCheckup(status, begin, end).Result;
+		});
+
+		StateHasChanged();
+	}
+
+	void ExportToExcel() {
+		service.ExportRepairStatusCheckupToExcel(
+			result);
+	}
+}

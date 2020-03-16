@@ -1,0 +1,26 @@
+﻿@page "/all-checkups"
+@inject ICheckupService service
+@inject NavigationManager navMan
+
+<h1>Checkups</h1>
+
+<MatSelect Label="Select checkup" @bind-Value="@str">
+	@foreach (string s in CommonConstants.Checkups) {
+		<MatOptionString Value="@s">@s</MatOptionString>
+	}
+</MatSelect>
+
+<MatButton @onclick="LoadCheckup">Load checkup</MatButton>
+
+@code {
+	string str = "";
+
+	void LoadCheckup() {
+		if(str == "Technician labor") {
+			navMan.NavigateTo("/all-checkups/technicians-checkup");
+		}
+		else if(str == "Status checkup") {
+			navMan.NavigateTo("/all-checkups/status-checkup");
+		}
+	}
+}
