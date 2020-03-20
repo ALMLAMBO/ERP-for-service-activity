@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using ERPForServiceActivity.CommonModels.BindingModels.Speedy;
 using System.Text.Json.Serialization;
 
-namespace ERPForServiceActivity.CommonModels.BindingModels {
+namespace ERPForServiceActivity.CommonModels.BindingModels.Speedy {
 	public class AddSpeedyShipmentBindingModel {
 		[Required]
 		[JsonPropertyName("userName")]
