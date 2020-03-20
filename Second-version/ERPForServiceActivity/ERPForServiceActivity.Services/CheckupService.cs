@@ -61,28 +61,30 @@ namespace ERPForServiceActivity.Services {
 				.Collection("service-repairs")
 				.GetSnapshotAsync();
 
-			Dictionary<string, DocumentSnapshot> dictionary = snapshot
+			Dictionary<string, List<DocumentSnapshot>> dictionary = snapshot
 				.Documents
-				.Cast<KeyValuePair<string, DocumentSnapshot>>()
-				.ToDictionary(x => x.Key, x => x.Value);
+				.GroupBy(x => x.ConvertTo<Repair>().TechnicianName)
+				.ToDictionary(x => x.Key, x => x.ToList());
 
-			dictionary
-				.GroupBy(x => x.Key)
-				.ToList()
+			dictionary.ToList()
 				.ForEach(x => {
-					double labor = 0;
+					TechniciаnCheckupViewModel model = 
+						new TechniciаnCheckupViewModel();
 
-					x.ToList()
-						.ForEach(y => {
-							labor += y.Value
-								.ConvertTo<Repair>()
-								.TechnicianLabor;
+					model.Name = x.Key;
+					double labor = 0;
+					
+					x.Value
+						.ForEach(x => {
+							Repair repair = x.ConvertTo<Repair>();
+
+							labor += repair.TechnicianLabor;
+							model.Brand = repair.ApplianceBrand;
+							model.Model = repair.ApplianceModel;
 						});
 
-					result.Add(new TechniciаnCheckupViewModel() {
-						Name = x.Key,
-						Labor = labor
-					});
+					model.Labor = labor;
+					result.Add(model);
 				});
 
 			return result;
