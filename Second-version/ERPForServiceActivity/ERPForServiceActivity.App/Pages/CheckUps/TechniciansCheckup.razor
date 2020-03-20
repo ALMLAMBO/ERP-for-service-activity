@@ -9,10 +9,9 @@
 				   @bind-Value="end" />
 </div>
 
-<MatButton @onclick="GetData"></MatButton>
+<MatButton @onclick="GetData">Get data</MatButton>
 
 <div>
-
 	<MatButton>Export to Excel</MatButton>
 </div>
 
@@ -21,10 +20,14 @@
 		<MatTableHeader>
 			<th>Technician name</th>
 			<th>Labor</th>
+			<th>Brand</th>
+			<th>Model</th>
 		</MatTableHeader>
 		<MatTableRow>
 			<td>@context.Name</td>
 			<td>@context.Labor</td>
+			<td>@context.Brand</td>
+			<td>@context.Model</td>
 		</MatTableRow>
 	</MatTable>
 </div>
