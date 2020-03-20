@@ -8,7 +8,7 @@ namespace ERPForServiceActivity.CommonModels.BindingModels.Speedy {
 	public class SpeedyShipmentPayment {
 		[Required]
 		[JsonPropertyName("courierServicePayer")]
-		public string CourierServicePayer { get; set; }
+		public string CourierServicePayer { get; set; } = PaymentOption.SENDER;
 
 		[JsonPropertyName("declaredValuePayer")]
 		public string DeclaredValuePayer { get; set; }
