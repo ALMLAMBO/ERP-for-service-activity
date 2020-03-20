@@ -3,9 +3,11 @@
 @inject IRepairService service
 @inject ILogService logService
 @inject IPdfService  pdfService
+@inject ISpeedyService speedyService
 @using GoogleMapsComponents
 @using GoogleMapsComponents.Maps
 @using GoogleMapsComponents.Maps.Places
+@using ERPForServiceActivity.App.Pages.Speedy
 @using ERPForServiceActivity.CommonModels.BindingModels.Maps
 
 <MatTable
@@ -28,6 +30,7 @@
 		<th nowrap>Add part</th>
 		<th>Add part to repair</th>
 		<th>Show parts for repair</th>
+		<th>Generante delivery</th>
 		<th>Defect</th>
 		<th nowrap>Additional Information</th>
 		<th nowrap>Warranty card number</th>
@@ -82,13 +85,18 @@
 									   showParts = true; 
 								   })">Show parts</MatButton>
 		</td>
+		<td><MatButton @onclick="@(() => {
+									   repairId = context.RepairId;
+									   CreateDelivery();
+								   })">
+			Generate Delivery</MatButton></td>
 		<td>@context.DefectByCustomer</td>
 		<td>@context.AdditionalInformation</td>
 		<td>@context.WarrantyCardNumber</td>
 		<td>@context.BoughtAt</td>
 		<td>@context.WarrantyPeriod</td>
 		<td><MatButton @onclick="@(() => ShowInMaps(context.CustomerAddress))">
-			Show in maps</MatButton></td>
+			Show</MatButton></td>
 		<td>@context.CustomerName</td>
 		<td>@context.CustomerAddress</td>
 		<td>@context.CustomerPhoneNumber</td>
@@ -217,10 +225,35 @@
 		Customer address visualisation
 	</MatDialogTitle>
 	<MatDialogContent>
-		<GoogleMap @ref="@map1" Id="map1" Options="@mapOptions" Height="500"></GoogleMap>
+		<GoogleMap @ref="@map1" Id="map1" Options="@mapOptions"></GoogleMap>
 	</MatDialogContent>
 	<MatDialogActions>
 		<MatButton @onclick="@(() => showMaps = false)">Close</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@showSpeedyForm">
+	<MatDialogTitle>
+		Generate consignment
+	</MatDialogTitle>
+	<MatDialogContent>
+		<SpeedyConsignmentAddForm />
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick="@(() => showSpeedyForm = false)">Close</MatButton>
+	</MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="showDeliveryNumber">
+	<MatDialogTitle>Result</MatDialogTitle>
+	<MatDialogContent>
+		<p>
+			Delivery number for repair @repairId is @deliveryNumber
+			.
+		</p>
+	</MatDialogContent>
+	<MatDialogActions>
+		<MatButton @onclick="@(() => showDeliveryNumber = false)">Close</MatButton>
 	</MatDialogActions>
 </MatDialog>
 
@@ -238,8 +271,11 @@
 	bool repairCard = false;
 	bool showPrint = false;
 	bool showMaps = false;
+	bool showSpeedyForm = false;
+	bool showDeliveryNumber = false;
 	int repairId = 0;
 	int quantity = 0;
+	string deliveryNumber = string.Empty;
 	string option = string.Empty;
 	string notes = string.Empty;
 	GoogleMap map1;
@@ -249,7 +285,6 @@
 	};
 
 	private ElementReference searchBox;
-	private Autocomplete autocomplete;
 
 	protected override async Task OnInitializedAsync() {
 		allRepairs = await Task.Run(() => {
@@ -302,7 +337,18 @@
 		parts = service.GetPartsForRepair(id);
 	}
 
+	void CreateDelivery() {
+		showSpeedyForm = true;
+
+		deliveryNumber = speedyService.CreateConsignment(
+			new AddSpeedyShipmentBindingModel(), repairId);
+
+		showDeliveryNumber = true;
+	}
+
 	void ShowInMaps(string address) {
+		showMaps = true;
+
 		MapsCoordinatesBindingModel model =
 			new MapsService()
 			.GetCoordinates(address)
@@ -313,22 +359,12 @@
 			Lng = model.Lng
 		};
 
-		showMaps = true;
-	}
-
-	private async Task OnAfterMapInitAsync() {
-		this.autocomplete = await Autocomplete.CreateAsync(this.map1.JsRuntime, this.searchBox, new AutocompleteOptions {
-			StrictBounds = false
-		});
-
-		await this.autocomplete.AddListener("place_changed", async () => await this.MapSearchPlaceChanged());
-	}
-
-	private async Task MapSearchPlaceChanged() {
-		var place = await this.autocomplete.GetPlace();
-
-		if (place?.Geometry?.Location != null) {
-			// do something with the place.Geometry.Location
-		}
+		Marker marker = Marker.CreateAsync(map1.JsRuntime, new MarkerOptions() {
+			Position = new LatLngLiteral() {
+				Lat = model.Lat,
+				Lng = model.Lng
+			},
+			Map = map1.InteropObject
+		}).Result;
 	}
 }
