@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Data", "ERPForServiceActivity.Data\ERPForServiceActivity.Data.csproj", "{D5330A94-0205-4847-990C-5E3589987689}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Models", "ERPForServiceActivity.Models\ERPForServiceActivity.Models.csproj", "{ADBACA74-CB6E-416D-8E74-E6683DEF8A13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D5330A94-0205-4847-990C-5E3589987689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5330A94-0205-4847-990C-5E3589987689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5330A94-0205-4847-990C-5E3589987689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADBACA74-CB6E-416D-8E74-E6683DEF8A13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADBACA74-CB6E-416D-8E74-E6683DEF8A13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADBACA74-CB6E-416D-8E74-E6683DEF8A13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADBACA74-CB6E-416D-8E74-E6683DEF8A13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
