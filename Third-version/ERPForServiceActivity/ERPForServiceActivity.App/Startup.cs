@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ERPForServiceActivity.App.ExtensionMethods;
 
 namespace ERPForServiceActivity.App {
 	public class Startup {
@@ -17,6 +18,11 @@ namespace ERPForServiceActivity.App {
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
+
+			services.AddServices();
+			services.ConfigureAuthentication();
+			services.ConfigureHttpClient();
+			services.ConfigureMatToast();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
