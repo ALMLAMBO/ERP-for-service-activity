@@ -4,4 +4,22 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="Pages\Error.razor" />
+    <None Include="Pages\Index.razor" />
+    <None Include="Pages\_Host.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorPro.Spinkit" Version="1.2.0" />
+    <PackageReference Include="MatBlazor" Version="2.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.4" />
+    <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ERPForServiceActivity.Security\ERPForServiceActivity.Security.csproj" />
+    <ProjectReference Include="..\ERPForServiceActivity.Services\ERPForServiceActivity.Services.csproj" />
+  </ItemGroup>
+
 </Project>
