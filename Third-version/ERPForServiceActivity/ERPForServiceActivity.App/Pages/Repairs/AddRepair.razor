@@ -5,6 +5,7 @@
 <MatToastContainer />
 <EditForm Model="model" OnSubmit="UploadRepair">
 	<DataAnnotationsValidator />
+	<ValidationSummary />
 
 	<div class="container">
 		<div class="row">
@@ -58,30 +59,46 @@
 					</div>
 				</div>
 
-				<div class="col-xl-12">
-					<MatTextField Label="Other information"
-								  TextArea="true"
-								  Outlined="true"
-								  @bind-Value="model.AdditionalInformation" />
-				</div>				
+				<div class="row">
+					<div class="col-xl-12 pb-3">
+						<MatTextField Label="Other information"
+									  TextArea="true"
+									  FullWidth="true"
+									  @bind-Value="model.AdditionalInformation" />
+
+					</div>
+
+					<div class="col-xl-12 pb-3">
+						<MatFileUpload Label="Other images" />
+					</div>
+				</div>
 			</div>
 
 			<div class="col-xl-6">
 				<h1>Unit data</h1>
 				<MatDivider />
 
-				<div class="row">
+				<div class="row pt-3">
+					<div class="col-xl-6">
+						<MatAutocompleteList Items="BrandsInfo.Brands"
+											 Label="Select brand"
+											 @bind-Value="model.UnitBrand" />
+					</div>
 
+					<div class="col-xl-6">
+
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-xl-6">
-				<MatButton Raised="true">Submit</MatButton>
+				<MatButton Label="Submit"
+						   Icon="oi-plus"
+						   Raised="true" />
 			</div>
 		</div>
 	</div>
-	<ValidationSummary />
 </EditForm>
 
 @code {
