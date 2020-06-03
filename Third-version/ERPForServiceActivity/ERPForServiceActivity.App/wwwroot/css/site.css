@@ -181,3 +181,31 @@ app {
         display: block;
     }
 }
+
+#main-container {
+	position: relative;
+}
+
+#bottom-position {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+}
+
+.sizes {
+    position: relative;
+}
+
+/*#add-info-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: auto;
+}*/
+
+#add-info {
+	width: 100%;
+	height: 100%;
+}
