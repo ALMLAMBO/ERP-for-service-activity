@@ -14,11 +14,11 @@ namespace ERPForServiceActivity.API.Controllers {
 		}
 
 		[HttpPost("add-repair")]
-		public async Task<ActionResult<bool>> UploadRepair(
+		public async Task<bool> UploadRepair(
 			[FromBody] AddRepairBindingModel model) {
 
 			if(!ModelState.IsValid) {
-				return BadRequest(false);
+				return false;
 			}
 
 			return await service.UploadRepair(model);

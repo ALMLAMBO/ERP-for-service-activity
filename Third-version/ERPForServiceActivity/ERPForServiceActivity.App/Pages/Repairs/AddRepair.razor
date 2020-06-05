@@ -202,27 +202,19 @@
 	AddRepairBindingModel model = new AddRepairBindingModel();
 
 	async Task UploadRepair() {
-		bool result = await client
-			.PostAsJsonAsync(ApiUrlAddresses.AddRepairUrl, model)
-			.ContinueWith<bool>(response => {
-				HttpStatusCode responseStatusCode =
-					response.Result.StatusCode;
+		await client.PostAsJsonAsync(
+			ApiUrlAddresses.AddRepairUrl,
+			model);
 
-				if (responseStatusCode == HttpStatusCode.BadRequest) {
-					return false;
-				}
 
-				return true;
-			});
-
-		if(result) {
-			toaster.Add("Repair uploaded successfully",
-				MatToastType.Success);
-		}
-		else {
-			toaster.Add("Repair upload failed",
-				MatToastType.Danger);
-		}
+		//if(result) {
+		//	toaster.Add("Repair uploaded successfully",
+		//		MatToastType.Success);
+		//}
+		//else {
+		//	toaster.Add("Repair upload failed",
+		//		MatToastType.Danger);
+		//}
 	}
 
 	void ShowDangerToast() {
