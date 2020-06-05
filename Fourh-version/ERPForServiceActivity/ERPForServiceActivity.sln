@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{A23A4659-66AC-4582-BEF3-FC7ECD558307}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{811C7A6E-C2FF-4C87-82A1-CBC68EF3D3A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A23A4659-66AC-4582-BEF3-FC7ECD558307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A23A4659-66AC-4582-BEF3-FC7ECD558307}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A23A4659-66AC-4582-BEF3-FC7ECD558307}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A23A4659-66AC-4582-BEF3-FC7ECD558307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{811C7A6E-C2FF-4C87-82A1-CBC68EF3D3A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{811C7A6E-C2FF-4C87-82A1-CBC68EF3D3A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{811C7A6E-C2FF-4C87-82A1-CBC68EF3D3A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{811C7A6E-C2FF-4C87-82A1-CBC68EF3D3A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {504FCBE2-913F-4D21-A06D-F494F088998E}
+		SolutionGuid = {C037AAE7-0789-40F1-9274-A34BAE85A2A4}
 	EndGlobalSection
 EndGlobal
