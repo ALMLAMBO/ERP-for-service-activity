@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{A23A4659-66AC-4582-BEF3-FC7ECD558307}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A23A4659-66AC-4582-BEF3-FC7ECD558307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A23A4659-66AC-4582-BEF3-FC7ECD558307}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A23A4659-66AC-4582-BEF3-FC7ECD558307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A23A4659-66AC-4582-BEF3-FC7ECD558307}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {504FCBE2-913F-4D21-A06D-F494F088998E}
+	EndGlobalSection
+EndGlobal
