@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj" />
     <ProjectReference Include="..\ERPForServiceActivity.Services\ERPForServiceActivity.Services.csproj" />
   </ItemGroup>
 
