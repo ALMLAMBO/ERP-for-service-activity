@@ -1,0 +1,224 @@
+﻿@page "/upload-repair"
+@inject HttpClient client  
+@inject IMatToaster toaster
+
+<MatToastContainer />
+<EditForm Model="model" OnValidSubmit="UploadRepair" 
+		  OnInvalidSubmit="ShowDangerToast">
+	<DataAnnotationsValidator />
+
+	<div class="container">
+		<div class="row mb-4">
+			<div class="col-xl-12">
+				<h1 class="display-4">Create new repair</h1>
+			</div>
+		</div>
+
+		<div id="main-container" class="row">
+			<div class="col-xl-6">
+				<h1>Customer data</h1>
+				<MatDivider />
+
+				<div class="row">
+					<div class="col-xl-6 py-3">
+						<MatTextField Label="Name"
+									  Outlined="true"
+									  @bind-Value="model.CustomerName" />
+
+						<ValidationMessage For="@(() => model.CustomerName)" />
+					</div>
+
+					<div class="col-xl-6 py-3 px-lg-4">
+						<MatTextField Label="Address"
+									  Outlined="true"
+									  @bind-Value="model.CustomerAddress" />
+
+						<ValidationMessage For="@(() => model.CustomerAddress)" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xl-6 pb-3">
+						<MatTextField Label="Phone number"
+									  Outlined="true"
+									  @bind-Value="model.CustomerPhoneNumber" />
+
+						<ValidationMessage For="@(() => model.CustomerPhoneNumber)" />
+					</div>
+
+					<div class="col-xl-6 pb-3">
+						<MatCheckbox Label="Going to address"
+									 @bind-Value="model.GoingToAddress" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xl-6 pb-3">
+						<MatTextField Label="Defect by customer"
+									  Outlined="true"
+									  @bind-Value="model.DefectByCustomer" />
+
+						<ValidationMessage For="@(() => model.DefectByCustomer)" />
+					</div>
+
+					<div class="col-xl-6 pb-3 pl-4">
+						<MatTextField Label="Add equipment"
+									  Outlined="true"
+									  @bind-Value="model.UnitEquipment" />
+
+						<ValidationMessage For="@(() => model.UnitEquipment)" />
+					</div>
+				</div>
+
+				<div class="row ml-0">
+					<div id="add-info" class="row ml-0">
+						<div class="col-xl-12 ">
+							<MatTextField Label="Other information"
+										  TextArea="true"
+										  FullWidth="true"
+										  @bind-Value="model.AdditionalInformation" />
+						</div>
+					</div>
+
+					<div id="bottom-position" class="row ml-0">
+						<div class="col-xl-12">
+							<MatFileUpload Label="Other images" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xl-6">
+				<h1>Unit data</h1>
+				<MatDivider />
+
+				<div class="row pt-3">
+					<div class="col-xl-6">
+						<MatAutocompleteList Items="BrandsInfo.Brands"
+											 Label="Select brand"
+											 ShowClearButton="true"
+											 @bind-Value="model.UnitBrand" />
+
+						<ValidationMessage For="@(() => model.UnitBrand)" />
+					</div>
+
+					<div class="col-xl-6">
+						<MatAutocompleteList Items="BrandsInfo.Types"
+											 Label="Select type"
+											 ShowClearButton="true"
+											 @bind-Value="model.UnitType" />
+
+						<ValidationMessage For="@(() => model.UnitType)" />
+					</div>
+				</div>
+
+				<div class="row pt-3">
+					<div class="col-xl-6">
+						<MatTextField Label="Model"
+									  Outlined="true"
+									  @bind-Value="model.UnitModel" />
+
+						<ValidationMessage For="@(() => model.UnitModel)" />
+					</div>
+
+					<div class="col-xl-6">
+						<MatTextField Label="S/N"
+									  Outlined="true"
+									  @bind-Value="model.UnitSerialNumber" />
+
+						<ValidationMessage For="@(() => model.UnitSerialNumber)" />
+					</div>
+				</div>
+
+				<div class="row pt-3">
+					<div class="col-xl-6">
+						<MatTextField Label="Product code/IMEI"
+									  Outlined="true"
+									  @bind-Value="model.UnitProductCodeOrImei" />
+					</div>
+
+					<div class="col-xl-6">
+						<MatDatePicker Label="Bought at"
+									   Outlined="true"
+									   @bind-Value="model.BoughtAt" />
+
+						<ValidationMessage For="@(() => model.BoughtAt)" />
+					</div>
+				</div>
+
+				<div class="row pt-3">
+					<div class="col-xl-6">
+						<MatTextField Label="Warranty card number"
+									  Outlined="true"
+									  @bind-Value="model.WarrantyCardNumber" />
+
+						<ValidationMessage For="@(() => model.WarrantyCardNumber)" />
+					</div>
+
+					<div class="col-xl-6">
+						<MatNumericUpDownFieldInternal Label="Warranty period"
+													   Step="12"
+													   TValue="int"
+													   Minimum="0"
+													   AllowInput="false"
+													   @bind-Value="model.WarrantyPeriod" />
+					</div>
+				</div>
+
+				<div class="row pt-3">
+					<div class="col-xl-12">
+						<MatTextField Label="Bought from"
+									  Outlined="true"
+									  @bind-Value="model.BoughtFrom" />
+
+						<ValidationMessage For="@(() => model.BoughtFrom)" />
+					</div>
+				</div>
+
+				<div class="row pt-3">
+					<div class="col-xl-12">
+						<MatFileUpload Label="S/N image" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row justify-content-end px-4 py-4">
+			<div class="col-xl-1 justify-content-end px-0">
+				<MatButton Label="Cancel"
+						   Raised="true" />
+			</div>
+
+			<div class="col-xl-1 justify-content-end px-2">
+				<MatButton Label="Submit"
+						   Type="Submit"
+						   Raised="true" />
+			</div>
+		</div>
+	</div>
+</EditForm>
+
+@code {
+	AddRepairBindingModel model = new AddRepairBindingModel();
+
+	async Task UploadRepair() {
+		await client.PostAsJsonAsync(
+			ApiUrlAddresses.AddRepairUrl,
+			model);
+
+
+		//if(result) {
+		//	toaster.Add("Repair uploaded successfully",
+		//		MatToastType.Success);
+		//}
+		//else {
+		//	toaster.Add("Repair upload failed",
+		//		MatToastType.Danger);
+		//}
+	}
+
+	void ShowDangerToast() {
+		toaster.Add("Repair upload failed",
+				MatToastType.Danger);
+	}
+}
