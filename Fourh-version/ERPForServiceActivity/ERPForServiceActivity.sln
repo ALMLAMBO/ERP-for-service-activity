@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{811C7A6E-C2FF-4C87-82A1-CBC68EF3D3A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.App", "ERPForServiceActivity.App\ERPForServiceActivity.App.csproj", "{811C7A6E-C2FF-4C87-82A1-CBC68EF3D3A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.API", "ERPForServiceActivity.API\ERPForServiceActivity.API.csproj", "{EBA155D6-FBC1-4E09-98CB-4E10F2D94C46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPForServiceActivity.API", "ERPForServiceActivity.API\ERPForServiceActivity.API.csproj", "{EBA155D6-FBC1-4E09-98CB-4E10F2D94C46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Common", "ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj", "{DC6DC48D-0583-4B8F-854A-55278792093D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{EBA155D6-FBC1-4E09-98CB-4E10F2D94C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBA155D6-FBC1-4E09-98CB-4E10F2D94C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBA155D6-FBC1-4E09-98CB-4E10F2D94C46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC6DC48D-0583-4B8F-854A-55278792093D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC6DC48D-0583-4B8F-854A-55278792093D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC6DC48D-0583-4B8F-854A-55278792093D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC6DC48D-0583-4B8F-854A-55278792093D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
