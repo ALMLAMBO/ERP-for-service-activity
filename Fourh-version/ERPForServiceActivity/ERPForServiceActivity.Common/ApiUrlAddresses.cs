@@ -1,6 +1,6 @@
 ﻿namespace ERPForServiceActivity.Common {
 	public class ApiUrlAddresses {
-		private const string baseAddress = "https://localhost:44333/";
+		private const string baseAddress = "https://localhost:44335/";
 
 		private static string repairBaseAddress =
 			$"{baseAddress}repair/";
