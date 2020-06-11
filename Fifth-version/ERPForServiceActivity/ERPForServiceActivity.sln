@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.App.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.Common", "ERPForServiceActivity.Common\ERPForServiceActivity.Common.csproj", "{722AAF5E-5DC3-4D72-9F6A-013FA49FAA88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPForServiceActivity.CommonModels", "ERPForServiceActivity.CommonModels\ERPForServiceActivity.CommonModels.csproj", "{B3841214-671D-4D7B-BA20-F2C0278D2127}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{722AAF5E-5DC3-4D72-9F6A-013FA49FAA88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{722AAF5E-5DC3-4D72-9F6A-013FA49FAA88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{722AAF5E-5DC3-4D72-9F6A-013FA49FAA88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3841214-671D-4D7B-BA20-F2C0278D2127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3841214-671D-4D7B-BA20-F2C0278D2127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3841214-671D-4D7B-BA20-F2C0278D2127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3841214-671D-4D7B-BA20-F2C0278D2127}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
