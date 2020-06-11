@@ -25,7 +25,8 @@ namespace ERPForServiceActivity.App.Controllers {
 			}
 
 			await HttpContext.SignOutAsync(
-				CookieAuthenticationDefaults.AuthenticationScheme);
+				CookieAuthenticationDefaults.AuthenticationScheme)
+				.ConfigureAwait(false);
 
 			return LocalRedirect(returnUrl ?? Url.Content("~/"));
 		}

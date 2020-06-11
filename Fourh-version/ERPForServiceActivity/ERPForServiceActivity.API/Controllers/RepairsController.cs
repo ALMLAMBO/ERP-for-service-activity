@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ERPForServiceActivity.Services.Interfaces.Repairs;
 using ERPForServiceActivity.CommonModels.BindingModels.Repairs;
 
 namespace ERPForServiceActivity.API.Controllers {
+	[Authorize]
 	[ApiController]
 	[Route("[controller]")]
 	public class RepairsController : ControllerBase {
@@ -21,7 +23,8 @@ namespace ERPForServiceActivity.API.Controllers {
 				return false;
 			}
 
-			return await service.UploadRepair(model);
+			return await service.UploadRepair(model)
+				.ConfigureAwait(false);
 		}
 	}
 }
