@@ -9,6 +9,10 @@ namespace ERPForServiceActivity.Data {
 		private string projectId;
 
 		private void SetUp() {
+			Environment.SetEnvironmentVariable(
+				"GOOGLE_APPLICATION_CREDENTIALS",
+				CommonSecurityConstants.PathToFirestoreJson);
+
 			GoogleCredential.FromFile(
 				CommonSecurityConstants
 					.PathToFirestoreJson);

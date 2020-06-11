@@ -22,9 +22,7 @@ namespace ERPForServiceActivity.Services {
 
 			FirestoreDb db = connection.GetFirestoreDb();
 			CollectionReference colRef = db
-				.Collection("warehouse-parts")
-				.Document("bcyvKBFBWE6DxnvIQ1Kn")
-				.Collection("parts");
+				.Collection("warehouse-parts");
 
 			WarehousePart newPart = new WarehousePart(model);
 			QuerySnapshot partsWithSamePN = await colRef
@@ -162,8 +160,6 @@ namespace ERPForServiceActivity.Services {
 				new List<WarehousePartViewModel>();
 
 			Query query = db.Collection("warehouse-parts")
-				.Document("bcyvKBFBWE6DxnvIQ1Kn")
-				.Collection("parts")
 				.WhereGreaterThanOrEqualTo("Availability", 1);
 
 			QuerySnapshot snapshot = await query.GetSnapshotAsync();

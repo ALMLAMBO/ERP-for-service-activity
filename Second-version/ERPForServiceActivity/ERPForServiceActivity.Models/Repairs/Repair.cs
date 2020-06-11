@@ -128,6 +128,6 @@ namespace ERPForServiceActivity.Models.Repairs {
 		public string AdditionalInformation { get; set; }
 
 		[FirestoreProperty]
-		public string Notes { get; set; }
+		public string Notes { get; set; } = string.Empty;
 	}
 }

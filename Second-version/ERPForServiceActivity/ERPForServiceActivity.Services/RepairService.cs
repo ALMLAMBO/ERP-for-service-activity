@@ -367,9 +367,7 @@ namespace ERPForServiceActivity.Services {
 			FirestoreDb db = connection.GetFirestoreDb();
 
 			CollectionReference colRef = db
-				.Collection("warehouse-parts")
-				.Document("bcyvKBFBWE6DxnvIQ1Kn")
-				.Collection("parts");
+				.Collection("warehouse-parts");
 
 			QuerySnapshot snapshot = colRef
 				.WhereEqualTo("PartNumber", partNumber)
