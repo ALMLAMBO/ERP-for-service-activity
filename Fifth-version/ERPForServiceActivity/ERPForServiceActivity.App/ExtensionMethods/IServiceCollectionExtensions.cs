@@ -7,20 +7,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using ERPForServiceActivity.Security;
-using ERPForServiceActivity.Services.Interfaces.Repairs;
-using ERPForServiceActivity.Services.Implementations.Repairs;
+//using ERPForServiceActivity.Services.Interfaces.Repairs;
+//using ERPForServiceActivity.Services.Implementations.Repairs;
 
 namespace ERPForServiceActivity.App.ExtensionMethods {
 	public static class IServiceCollectionExtensions {
 		public static void AddServices(
 			this IServiceCollection services) {
 
-			services.AddSingleton<IRepairService, RepairService>();
+			//services.AddSingleton<IRepairService, RepairService>();
 		}
 
 		public static void ConfigureAuthentication(
 			this IServiceCollection services) {
 
+			services.AddAuthorization();
 			services
 				.AddAuthentication(options => {
 					options.DefaultAuthenticateScheme =
@@ -50,8 +51,6 @@ namespace ERPForServiceActivity.App.ExtensionMethods {
 				.AddCookie(options => {
 					options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
 				});
-
-			services.AddAuthorization();
 		}
 
 		public static void ConfigureHttpClient(
