@@ -21,7 +21,6 @@ namespace ERPForServiceActivity.App.ExtensionMethods {
 		public static void ConfigureAuthentication(
 			this IServiceCollection services) {
 
-			services.AddAuthorization();
 			services
 				.AddAuthentication(options => {
 					options.DefaultAuthenticateScheme =
@@ -51,6 +50,8 @@ namespace ERPForServiceActivity.App.ExtensionMethods {
 				.AddCookie(options => {
 					options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
 				});
+
+			services.AddAuthorization();
 		}
 
 		public static void ConfigureHttpClient(
