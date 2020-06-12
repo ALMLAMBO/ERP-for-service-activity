@@ -48,8 +48,6 @@ namespace ERPForServiceActivity.Services {
 				foreach (KeyValuePair<string, int> x in model.PartsForRepair) {
 					QuerySnapshot qst = db
 							.Collection("warehouse-parts")
-							.Document("bcyvKBFBWE6DxnvIQ1Kn")
-							.Collection("parts")
 							.WhereEqualTo("PartNumber", x.Key)
 							.Limit(1)
 							.GetSnapshotAsync()

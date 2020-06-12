@@ -98,6 +98,7 @@ namespace ERPForServiceActivity.Services {
 							newPart.SubstituteParts;
 
 						p.Availability = partsWithSamePN.Count + 1;
+						newPart.Availability = p.Availability;
 						Dictionary<string, object> partAsDictionary =
 							ConvertPartToDictionary(p);
 
@@ -164,10 +165,12 @@ namespace ERPForServiceActivity.Services {
 
 			QuerySnapshot snapshot = await query.GetSnapshotAsync();
 			Parallel.ForEach(snapshot.Documents, ds => {
-				WarehousePartViewModel part =
+				lock(typeof(WarehousePart)) {
+					WarehousePartViewModel part =
 						ConvertDsToViewModel(ds);
 
-				parts.Add(part);
+					parts.Add(part);
+				}
 			});
 
 			return parts;
@@ -287,7 +290,10 @@ namespace ERPForServiceActivity.Services {
 				);
 			}
 
-			return result;
+			HashSet<WarehousePartViewModel> warehouseParts =
+				new HashSet<WarehousePartViewModel>(result);
+
+			return warehouseParts.ToList();
 		}
 	}
 }

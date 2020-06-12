@@ -6,8 +6,6 @@
 @inject ISpeedyService speedyService
 @using GoogleMapsComponents
 @using GoogleMapsComponents.Maps
-@using GoogleMapsComponents.Maps.Places
-@using ERPForServiceActivity.App.Pages.Speedy
 @using ERPForServiceActivity.CommonModels.BindingModels.Maps
 
 <MatTable
@@ -27,8 +25,9 @@
 		<th>S/N</th>
 		<th width="200">Product code/IMEI</th>
 		<th width="200">Created at</th>
-		<th nowrap>Add part</th>
-		<th>Add part to repair</th>
+		<th>Generate pdf</th>
+		<th nowrap>Request part</th>
+		<th>Send part to repair</th>
 		<th>Show parts for repair</th>
 		<th>Generante delivery</th>
 		<th>Defect</th>
@@ -67,6 +66,9 @@
 		<td>@context.ApplianceSerialNumber</td>
 		<td>@context.ApplianceProductCodeOrImei</td>
 		<td>@context.CreatedAt</td>
+		<td><MatButton Label="Generate pdf"
+					   @onclick="@(() => { showPrint = true;
+									   repairId = context.RepairId; })" /></td>
 		<td>
 			<MatButton @onclick="@(() => { log.RepairId = context.RepairId;
 									   repairId = context.RepairId;
@@ -170,9 +172,6 @@
 
 		<MatTextField Label="Description"
 					  @bind-Value="@part.Description" />
-
-		<MatFileUpload Label="Upload part image"
-					   OnChange="ShowPicture" />
 	</MatDialogContent>
 
 	<MatDialogActions>
@@ -234,26 +233,15 @@
 
 <MatDialog @bind-IsOpen="@showSpeedyForm">
 	<MatDialogTitle>
-		Generate consignment
+		Generate delivery
 	</MatDialogTitle>
 	<MatDialogContent>
-		<ERPForServiceActivity.App.Pages.Speedy.SpeedyConsignmentView />
-	</MatDialogContent>
-	<MatDialogActions>
-		<MatButton @onclick="@(() => showSpeedyForm = false)">Close</MatButton>
-	</MatDialogActions>
-</MatDialog>
-
-<MatDialog @bind-IsOpen="showDeliveryNumber">
-	<MatDialogTitle>Result</MatDialogTitle>
-	<MatDialogContent>
 		<p>
-			Delivery number for repair @repairId is @deliveryNumber
-			.
+			Delivery number for repair @repairId is @deliveryNumber.
 		</p>
 	</MatDialogContent>
 	<MatDialogActions>
-		<MatButton @onclick="@(() => showDeliveryNumber = false)">Close</MatButton>
+		<MatButton @onclick="@(() => showSpeedyForm = false)">Close</MatButton>
 	</MatDialogActions>
 </MatDialog>
 

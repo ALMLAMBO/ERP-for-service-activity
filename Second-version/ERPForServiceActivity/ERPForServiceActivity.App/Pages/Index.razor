@@ -1,19 +1,20 @@
 ﻿@page "/"
 @using PayPalHttp
 @using PayPalCheckoutSdk.Orders
-@using GoogleMapsComponents
-@using GoogleMapsComponents.Maps
-@using ERPForServiceActivity.CommonModels.BindingModels.Maps
 @inject NavigationManager navMan
 @inject IMapsService service
 @inject IRepairService repairService
 
-<MatButton @onclick="@(() => { showCustomerLogin = true; })">
-	Customer login
-</MatButton>
-<MatButton @onclick="@(() => { showPersonalLogin = true; })">
-	Services login
-</MatButton>
+<AuthorizeView>
+	<Authorized>
+
+	</Authorized>
+	<NotAuthorized>
+		<MatButton @onclick="@(() => { showCustomerLogin = true; })">
+			Customer login
+		</MatButton>
+	</NotAuthorized>
+</AuthorizeView>
 
 <MatDialog @bind-IsOpen="@showCustomerLogin">
 	<MatDialogTitle>
@@ -53,30 +54,6 @@
 		<MatButton @onclick="@(() => { showCustomerLogin = false; })">Close</MatButton>
 	</MatDialogActions>
 </MatDialog>
-
-<!--MatDialog @bind-IsOpen="@showPersonalLogin">
-	<MatDialogTitle>
-		Services login
-	</MatDialogTitle>
-	<MatDialogContent>
-		<MatTextField Label="Username"
-					  @bind-Value="@repair.CustomerAddress"/>
-
-		<MatTextField Label="Password"
-					  Type="passowrd"
-					  @bind-Value="@repair.CustomerName"/>
-
-		<MatTextField Label="Verification code"
-					  @bind-Value="@repair.DefectByCustomer"/>
-	</MatDialogContent>
-	<MatDialogActions>
-		<MatButton @onclick=
-				   "@(() => { showPersonalLogin = false; })">Login</MatButton>
-
-		<MatButton @onclick=
-				   "@(() => { showPersonalLogin = false; })">Cancel</MatButton>
-	</MatDialogActions>
-</MatDialog-->
 
 @code {
 	bool showCustomerLogin = false;

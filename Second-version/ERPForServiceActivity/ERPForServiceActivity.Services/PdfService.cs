@@ -15,7 +15,7 @@ using ERPForServiceActivity.Models.Warehouse;
 
 namespace ERPForServiceActivity.Services {
 	public class PdfService : IPdfService {
-		public async void CreatePdf(int id, string type, string notes) {
+		public async void CreatePdf(int id, string type, string notes = "") {
 			Encoding.RegisterProvider(
 				CodePagesEncodingProvider.Instance);
 

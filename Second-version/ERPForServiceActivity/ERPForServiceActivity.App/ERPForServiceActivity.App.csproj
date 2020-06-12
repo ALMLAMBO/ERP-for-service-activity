@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="BlazorGoogleMaps" Version="0.5.4" />
-    <PackageReference Include="MatBlazor" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.7.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
