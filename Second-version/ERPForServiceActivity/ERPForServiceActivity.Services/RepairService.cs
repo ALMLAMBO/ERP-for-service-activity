@@ -1,11 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using MatBlazor;
-using Google.Cloud.Storage;
 using Google.Cloud.Vision.V1;
 using Google.Cloud.Firestore;
 using ERPForServiceActivity.Data;
@@ -30,15 +27,29 @@ namespace ERPForServiceActivity.Services {
 			CollectionReference repairsColRef = db
 				.Collection("service-repairs");
 
-			DateTime endOfWarranty = new DateTime(
-				repair.BoughtAt.Year + repair.WarrantyPeriod / 12,
-				repair.BoughtAt.Month, repair.BoughtAt.Day);
-
-			repair.InWarranty = 
-				DateTime.UtcNow >= repair.BoughtAt &&
-				DateTime.UtcNow <= endOfWarranty ? true : false;
-
 			Repair repairModel = new Repair(repair);
+
+			if(repairModel.BoughtAt.Day == 29 
+				&& repairModel.BoughtAt.Month == 2) {
+
+				int warrantyInYears = repairModel.WarrantyPeriod / 12;
+
+				if(warrantyInYears % 4 == 0) {
+					repairModel.WarrantyExpiresOn =
+						repairModel.BoughtAt.AddYears(warrantyInYears);
+				}
+				else {
+					repairModel.WarrantyExpiresOn =
+						repairModel.BoughtAt.AddYears(warrantyInYears)
+						.AddDays(1);
+				}
+			}
+			else {
+				int warrantyInYears = repairModel.WarrantyPeriod / 12;
+				
+				repairModel.WarrantyExpiresOn =
+						repairModel.BoughtAt.AddYears(warrantyInYears);
+			}
 
 			await db
 				.RunTransactionAsync(async transaction => {
@@ -151,10 +162,12 @@ namespace ERPForServiceActivity.Services {
 				.GetSnapshotAsync();
 
 			Parallel.ForEach(snapshot.Documents, ds => {
-				if (ds.Exists) {
-					RepairViewModel model = NewModel(ds);
+				lock(typeof(Repair)) {
+					if (ds.Exists) {
+						RepairViewModel model = NewModel(ds);
 
-					repairs.Add(model);
+						repairs.Add(model);
+					}
 				}
 			});
 
