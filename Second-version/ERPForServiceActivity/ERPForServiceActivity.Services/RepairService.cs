@@ -453,6 +453,12 @@ namespace ERPForServiceActivity.Services {
 				.GetSnapshotAsync()
 				.Result;
 
+			if(snapshot.Documents.Count == 0) {
+				return new Dictionary<string, int>() {
+					{ $"There are no parts for repair {id}", 0 }
+				};
+			}
+
 			return snapshot
 				.Documents
 				.FirstOrDefault()
